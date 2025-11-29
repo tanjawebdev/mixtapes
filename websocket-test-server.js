@@ -12,8 +12,9 @@
  *   4. Watch the portfolio update automatically
  */
 
-const WebSocket = require('ws');
-const wss = new WebSocket.Server({ port: 8080 });
+import { WebSocketServer } from 'ws';
+
+const wss = new WebSocketServer({ port: 8080 });
 
 console.log('🚀 WebSocket Test Server running on ws://localhost:8080');
 console.log('');
