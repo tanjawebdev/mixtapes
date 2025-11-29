@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useStore } from '../store';
 import type { WebSocketMessage } from '../types';
 
-const WS_URL = 'ws://localhost:8080';
+const WS_URL = 'ws://192.168.178.44:81';
 const RECONNECT_DELAY = 3000; // 3 seconds
 
 /**
