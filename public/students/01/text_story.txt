@@ -1,0 +1,7 @@
+Die Geschichte meiner Arbeit
+
+Hier könnte eine längere Geschichte über das Projekt stehen.
+
+Mehrere Absätze werden korrekt dargestellt und das Layout passt sich automatisch an.
+
+Das Portfolio-System lädt diese Inhalte sehr schnell aus dem lokalen Dateisystem.

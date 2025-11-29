@@ -1,0 +1,6 @@
+Dies ist ein Beispiel-Text für das Portfolio von Magdalena Ackerl.
+
+Diese Text-Datei zeigt, wie Textinhalte im Portfolio-System angezeigt werden.
+
+Das System unterstützt mehrere Absätze und lädt den Text dynamisch aus der lokalen Datei.
+

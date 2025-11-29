@@ -1,0 +1,12 @@
+{
+    "name": "Magdalena Ackerl",
+    "texts": [
+        "text_intro.txt",
+        "text_story.txt"
+    ],
+    "media": [
+        "cover.jpg",
+        "project1.mp4",
+        "project1.jpg"
+    ]
+}
