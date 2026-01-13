@@ -8,9 +8,11 @@ import { useStore } from '../store';
  * and handles incoming OSC messages to control the portfolio display.
  * 
  * Expected OSC message formats from Max/MSP:
- * - /index <number>        : Set student index (e.g., "/index 12")
- * - /nav next|prev         : Navigate between states (e.g., "/nav next")
- * - /scrollposition <number>: Set scroll position (e.g., "/scrollposition 111")
+ * - /cdpresent <0|1>       : CD present sensor (1 = present, 0 = not present)
+ * - /index <number>        : Student index 0-100 (e.g., "/index 11")
+ * - /btnprev <0|1>         : Previous button (1 = pressed, 0 = released)
+ * - /btnnext <0|1>         : Next button (1 = pressed, 0 = released)
+ * - /scrollpos <number>    : Scroll position value
  */
 export const useOscData = () => {
     const wsRef = useRef<WebSocket | null>(null);
@@ -41,10 +43,10 @@ export const useOscData = () => {
                     // Handle different OSC message types from Max/MSP
                     switch (address) {
                         case '/index': {
-                            // Student index: "/index 12"
+                            // Student index: "/index 11" (value 0-100)
                             const studentIndex = args[0]?.value;
                             if (studentIndex !== undefined) {
-                                const studentId = `student_${studentIndex}`;
+                                const studentId = String(studentIndex);
                                 console.log(`🎯 Setting student: ${studentId}`);
                                 // Keep the current state when switching students
                                 setCurrentStudent(studentId, currentState || 'intro');
@@ -52,21 +54,39 @@ export const useOscData = () => {
                             break;
                         }
 
-                        case '/nav': {
-                            // Navigation: "/nav next" or "/nav prev"
-                            const direction = args[0]?.value;
-                            console.log(`🧭 Navigation: ${direction}`);
-                            // TODO: Implement navigation logic in your store
-                            // This could cycle through states or students
+                        case '/cdpresent': {
+                            // CD present sensor: "/cdpresent 1" or "/cdpresent 0"
+                            const isPresent = args[0]?.value === 1;
+                            console.log(`💿 CD Present: ${isPresent ? 'Yes' : 'No'}`);
+                            // TODO: You can add logic here to pause/resume based on CD presence
                             break;
                         }
 
-                        case '/scrollposition': {
-                            // Scroll position: "/scrollposition 111"
+                        case '/btnprev': {
+                            // Previous button: "/btnprev 1" (pressed) or "/btnprev 0" (released)
+                            const pressed = args[0]?.value === 1;
+                            if (pressed) {
+                                console.log(`⬅️  Previous button pressed`);
+                                // TODO: Implement previous state/student navigation
+                            }
+                            break;
+                        }
+
+                        case '/btnnext': {
+                            // Next button: "/btnnext 1" (pressed) or "/btnnext 0" (released)
+                            const pressed = args[0]?.value === 1;
+                            if (pressed) {
+                                console.log(`➡️  Next button pressed`);
+                                // TODO: Implement next state/student navigation
+                            }
+                            break;
+                        }
+
+                        case '/scrollpos': {
+                            // Scroll position: "/scrollpos 5"
                             const scrollPos = args[0]?.value;
                             console.log(`📜 Scroll position: ${scrollPos}`);
                             // TODO: You can add scroll handling here if needed
-                            // For now, this is just logged
                             break;
                         }
 

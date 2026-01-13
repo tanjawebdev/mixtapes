@@ -13,7 +13,7 @@ interface StoreActions {
 type Store = AppState & StoreActions;
 
 const initialState: AppState = {
-    currentStudentId: null,
+    currentStudentId: '1',
     currentState: null,
     studentDataCache: {},
     isLoading: false,
