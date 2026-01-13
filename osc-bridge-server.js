@@ -41,6 +41,12 @@ udpPort.on('ready', () => {
 udpPort.on('message', (oscMsg) => {
     console.log('📨 Received OSC:', oscMsg.address, oscMsg.args);
 
+    // 📨 Received OSC: /cdpresent [ { type: 'i', value: 1 } ] or 0
+    // 📨 Received OSC: /index [ { type: 'i', value: 11 } ] probably between 0 and 100
+    // 📨 Received OSC: /btnprev [ { type: 'i', value: 1 } ] or 0
+    // 📨 Received OSC: /btnnext [ { type: 'i', value: 1 } ] or 0
+    // 📨 Received OSC: /scrollpos [ { type: 'i', value: 5 } ] -> ignore for now until we know values
+
     // Forward to all connected WebSocket clients (React app)
     const message = JSON.stringify(oscMsg);
     clients.forEach((client) => {
