@@ -1,0 +1,38 @@
+//design farben
+$c-white: #ffffff;
+$c-grey-100: #efefef;
+$c-grey-200: #cfcfcf;
+$c-grey-300: #cbcbcb;
+$c-grey-400: #bbbbbb;
+$c-grey-500: #78787a;
+$c-grey-600: #5b5b5b;
+$c-grey-700: #404040;
+$c-black-soft: #121212;
+$c-pure-blue: #0000ff;
+
+//major farben
+$c-comm-start: #3ad33a;
+$c-comm-end: #f2f249;
+
+$c-media-start: #144bff;
+$c-media-end: #00ffd4;
+
+$c-inter-start: #b940ff;
+$c-inter-end: #1ed6ff;
+
+$c-sound-start: #cc99cc;
+$c-sound-end: #ffcc99;
+
+//major verläufe
+$grad-communication: linear-gradient(90deg, $c-comm-start, $c-comm-end);
+$grad-media: linear-gradient(90deg, $c-media-start, $c-media-end);
+$grad-interaction: linear-gradient(90deg, $c-inter-start, $c-inter-end);
+$grad-sound: linear-gradient(90deg, $c-sound-start, $c-sound-end);
+
+//mapper, so können wir dann im json jeder person eine farbe zuweisen, das macht sozusagen klassen
+$category-themes: (
+  "communication": $grad-communication,
+  "media": $grad-media,
+  "interaction": $grad-interaction,
+  "sound": $grad-sound,
+);

@@ -1,0 +1,182 @@
+// Variablen für einfache Anpassungen
+$font-stack: "Chicago", sans-serif;
+$text-color: #ffffff;
+$bg-color: #121212; // Hintergrundfarbe (wichtig für Gradients)
+$card-height: 400px; // Höhe der Bildergalerie
+$gap: 20px; // Abstand zwischen Bildern
+$scroll-speed: 40s; // Dauer eines Durchlaufs (höher = langsamer)
+
+.project-wrapper {
+  margin-bottom: 6rem;
+  font-family: $font-stack;
+  color: $text-color;
+  width: 100%;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+
+  // --- HEADER STYLES ---
+  .project-header {
+    margin-bottom: 2rem;
+    padding: 0 1rem; // Kleiner Seitenabstand
+
+    .project-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 2px solid $text-color;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+
+      h2 {
+        font-size: 2.5rem;
+        text-transform: uppercase;
+        margin: 0;
+        line-height: 1;
+      }
+
+      .project-year {
+        font-size: 2.5rem;
+        font-weight: bold;
+      }
+    }
+
+    .project-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+
+      .meta-item {
+        display: flex;
+        flex-direction: column;
+
+        .label {
+          font-size: 0.8rem;
+          opacity: 0.6;
+          text-transform: uppercase;
+          margin-bottom: 0.25rem;
+          letter-spacing: 1px;
+        }
+
+        .value {
+          font-size: 1.1rem;
+        }
+      }
+    }
+
+    .project-description {
+      font-size: 1.3rem;
+      line-height: 1.6;
+      max-width: 800px;
+      opacity: 0.9;
+    }
+  }
+
+  // --- MARQUEE (LAUFSCHRIFT) STYLES ---
+  .project-marquee-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    padding: 1rem 0;
+
+    // Weiche Kanten (Fade-Out) links und rechts
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 100px;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+    &::before {
+      left: 0;
+      background: linear-gradient(to right, $bg-color, transparent);
+    }
+    &::after {
+      right: 0;
+      background: linear-gradient(to left, $bg-color, transparent);
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: $gap;
+      width: max-content;
+      // Die Animation
+      animation: scrollLeft $scroll-speed linear infinite;
+
+      // Feature: Pausieren, wenn Maus drüber ist
+      &:hover {
+        animation-play-state: paused;
+      }
+
+      .project-image-card {
+        height: $card-height;
+        min-width: 300px; // Mindestbreite
+        flex-shrink: 0;
+        border-radius: 4px;
+        overflow: hidden;
+        background: #000;
+        border: 1px solid #333;
+
+        img {
+          height: 100%;
+          width: auto;
+          // 'contain' zeigt das ganze Bild mit schwarzen Balken
+          // 'cover' würde es zuschneiden, um die Box zu füllen
+          object-fit: contain;
+          display: block;
+        }
+      }
+    }
+  }
+
+  .no-images-placeholder {
+    padding: 3rem;
+    text-align: center;
+    border: 1px dashed #444;
+    color: #666;
+    margin: 1rem;
+    font-family: monospace;
+  }
+
+  .project-divider {
+    border: 0;
+    height: 1px;
+    background: #333;
+    margin-top: 4rem;
+  }
+}
+
+// --- ANIMATION ---
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    // Da wir die Liste verdreifacht haben, schieben wir um 1/3 nach links.
+    // Das entspricht genau der Länge des Original-Arrays.
+    // Calc korrigiert den Gap.
+    transform: translateX(calc(-33.333% - #{$gap}));
+  }
+}
+
+// Mobile Anpassung
+@media (max-width: 768px) {
+  .project-wrapper {
+    .project-header {
+      h2 {
+        font-size: 1.8rem;
+      }
+      .project-year {
+        font-size: 1.8rem;
+      }
+    }
+    // Kleinere Bilder auf Handys
+    .project-marquee-container .marquee-track .project-image-card {
+      height: 250px;
+    }
+  }
+}
