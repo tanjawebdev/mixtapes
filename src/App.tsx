@@ -30,10 +30,32 @@ function App() {
         {wsConnected ? 'Connected' : 'Disconnected'}
       </div>
 
-      {/* Main portfolio display */}
+      {/* TESTING VIDEO QUALITY */}
+      <video autoPlay loop muted playsInline style={{width: '100vw'}}>
+        <source src="/students/02/vid1.mp4" type="video/mp4"/>
+      </video>
+      <video autoPlay loop muted playsInline style={{width: '100vw'}}>
+        <source src="/students/02/vid2.mp4" type="video/mp4"/>
+      </video>
+      <video autoPlay loop muted playsInline style={{width: '100vw'}}>
+        <source src="/students/02/vid3.mp4" type="video/mp4"/>
+      </video>
+      <video autoPlay loop muted playsInline style={{width: '100vw'}}>
+        <source src="/students/02/vid4.mp4" type="video/mp4"/>
+      </video>
+      <video autoPlay loop muted playsInline style={{width: '100vw'}}>
+        <source src="/students/02/vid5.mp4" type="video/mp4"/>
+      </video>
+      <video autoPlay loop muted playsInline style={{width: '100vw'}}>
+        <source src="/students/02/vid6.mp4" type="video/mp4"/>
+      </video>
+
+
+      {/* Main portfolio display
       <StudentDataLoader>
         <PortfolioDisplay />
       </StudentDataLoader>
+       */}
     </div>
   );
 }
