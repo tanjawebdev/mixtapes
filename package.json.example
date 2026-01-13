@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "dev": "vite",
+    "osc-bridge": "node osc-bridge-server.js",
+    "start": "concurrently \"npm run dev\" \"npm run osc-bridge\""
+  },
+  "dependencies": {
+    "osc": "^2.4.4",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

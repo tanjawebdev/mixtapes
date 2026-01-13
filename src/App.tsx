@@ -1,4 +1,4 @@
-import { useWebSocket } from './hooks/useWebSocket';
+import { useOscData } from './hooks/useOscData';
 import { StudentDataLoader } from './components/StudentDataLoader';
 import { PortfolioDisplay } from './components/PortfolioDisplay';
 import { useStore } from './store';
@@ -7,10 +7,10 @@ import './App.css';
 /**
  * Main App Component
  * 
- * Portfolio Exhibition System - WebSocket-controlled student portfolio viewer
+ * Portfolio Exhibition System - OSC-controlled student portfolio viewer
  * 
  * Architecture:
- * 1. WebSocket connects automatically and listens for control messages
+ * 1. OSC bridge connects automatically and listens for control messages
  * 2. Messages update Zustand store with current student and state
  * 3. StudentDataLoader ensures data is loaded and cached
  * 4. PortfolioDisplay renders the appropriate content
@@ -18,16 +18,16 @@ import './App.css';
  * All content is loaded from /public/students/{id}/ directory
  */
 function App() {
-  // Initialize WebSocket connection
-  useWebSocket();
-  const wsConnected = useStore((state) => state.wsConnected);
+  // Initialize OSC connection
+  useOscData();
+  const oscConnected = useStore((state) => state.wsConnected); // Reusing wsConnected state for OSC
 
   return (
     <div className="app">
-      {/* WebSocket connection status indicator */}
-      <div className={`ws-status ${wsConnected ? 'connected' : 'disconnected'}`}>
+      {/* OSC connection status indicator */}
+      <div className={`ws-status ${oscConnected ? 'connected' : 'disconnected'}`}>
         <span className="ws-status-dot"></span>
-        {wsConnected ? 'Connected' : 'Disconnected'}
+        {oscConnected ? 'OSC Connected' : 'OSC Disconnected'}
       </div>
 
       {/* Main portfolio display */}
