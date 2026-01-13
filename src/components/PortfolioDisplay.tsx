@@ -17,6 +17,7 @@ export function PortfolioDisplay() {
     const isLoading = useStore((state) => state.isLoading);
 
     // No student selected yet
+    console.log(currentState);
     if (!currentStudentId || !currentState) {
         return (
             <div className="portfolio-waiting">

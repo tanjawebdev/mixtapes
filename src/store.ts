@@ -13,7 +13,7 @@ interface StoreActions {
 type Store = AppState & StoreActions;
 
 const initialState: AppState = {
-    currentStudentId: '1',
+    currentStudentId: null,
     currentState: null,
     studentDataCache: {},
     isLoading: false,
@@ -25,7 +25,8 @@ const initialState: AppState = {
  * Zustand store for managing application state
  * 
  * This is the single source of truth for:
- * - Current student ID and state (controlled by WebSocket)
+ * - Current student ID and state (controlled by WebSocket) 
+ * ---> TODO: state 
  * - Cached student data (for instant loading)
  * - Loading and error states
  * - WebSocket connection status
