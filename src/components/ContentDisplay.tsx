@@ -1,111 +1,116 @@
-import { useEffect, useState } from 'react';
-import { getContentType } from '../types';
+import { useStudentMedia } from '../hooks/useStudentMedia';
+import { useStudentsData } from '../hooks/useStudentsData';
+import './ContentDisplay.css';
 
 interface ContentDisplayProps {
     studentId: string;
-    filename: string;
+    projectNumber: number;
 }
 
 /**
- * Displays content based on file type (text, image, or video)
- * Handles smooth transitions and loading states
+ * Displays all images and videos from a project folder
+ * Project structure: /public/students/[studentID]/[projectNumber]/
+ * 
+ * Now uses automatic media discovery via useStudentMedia hook
  */
-export function ContentDisplay({ studentId, filename }: ContentDisplayProps) {
-    const contentType = getContentType(filename);
-    const url = `/students/${studentId}/${filename}`;
+export function ContentDisplay({ studentId, projectNumber }: ContentDisplayProps) {
+    // Convert studentId string to number (e.g., "01" -> 1)
+    const studentID = parseInt(studentId);
 
-    console.log(`[Display] Rendering ${contentType}: ${filename}`);
+    // Get student data and project metadata
+    const { getStudentById, loading: studentsLoading } = useStudentsData();
+    const student = getStudentById(studentID);
+    const project = student?.projects[projectNumber - 1]; // projectNumber is 1-based
 
-    switch (contentType) {
-        case 'text':
-            return <TextContent url={url} filename={filename} />;
-        case 'image':
-            return <ImageContent url={url} filename={filename} />;
-        case 'video':
-            return <VideoContent url={url} />;
-        default:
-            return (
-                <div className="content-error">
-                    <p>Unsupported content type: {filename}</p>
-                </div>
-            );
+    // Auto-discover media files from folder
+    const { all: mediaFiles } = useStudentMedia(studentID, projectNumber);
+
+    // Loading state
+    if (studentsLoading) {
+        return (
+            <div className="project-loading">
+                <div className="loading-spinner"></div>
+                <p>Loading project {projectNumber}...</p>
+            </div>
+        );
     }
-}
 
-/** Text content component */
-function TextContent({ url, filename }: { url: string; filename: string }) {
-    const [text, setText] = useState<string>('');
-    const [loading, setLoading] = useState(true);
+    // Error states
+    if (!student) {
+        return (
+            <div className="project-empty">
+                <p>Student not found</p>
+            </div>
+        );
+    }
 
-    useEffect(() => {
-        async function loadText() {
-            try {
-                setLoading(true);
-                const response = await fetch(url);
-                const content = await response.text();
-                setText(content);
-            } catch (err) {
-                console.error('[Text] Error loading:', err);
-                setText('Error loading text content');
-            } finally {
-                setLoading(false);
-            }
-        }
+    if (!project) {
+        return (
+            <div className="project-empty">
+                <p>Project {projectNumber} not found for this student</p>
+            </div>
+        );
+    }
 
-        loadText();
-    }, [url]);
-
-    if (loading) {
-        return <div className="content-loading">Loading text...</div>;
+    if (mediaFiles.length === 0) {
+        return (
+            <div className="project-empty">
+                <p>No media files in this project</p>
+                <p className="project-empty__hint">
+                    Add images or videos to: /public/students/{studentID}/{projectNumber}/
+                </p>
+            </div>
+        );
     }
 
     return (
-        <div className="content-text">
-            <h2>{filename.replace(/\.(txt|md)$/, '')}</h2>
-            <div className="text-content">
-                {text.split('\n').map((line, i) => (
-                    <p key={i}>{line}</p>
+        <div className="project-content">
+            {/* Optional: Display project metadata */}
+            <div className="project-header">
+                <h2 className="project-title">{project.title}</h2>
+                <p className="project-meta">
+                    {project.year} · {project.type}
+                </p>
+            </div>
+
+            {/* Media Gallery */}
+            <div className="project-gallery">
+                {mediaFiles.map((media, index) => (
+                    <div key={index} className="gallery-item">
+                        {media.type === 'image' ? (
+                            <img
+                                src={media.path}
+                                alt={`${project.title} - ${media.filename}`}
+                                className="gallery-image"
+                                loading="lazy"
+                            />
+                        ) : (
+                            <video
+                                src={media.path}
+                                controls
+                                autoPlay
+                                loop
+                                muted
+                                className="gallery-video"
+                            >
+                                Your browser does not support video playback.
+                            </video>
+                        )}
+                    </div>
                 ))}
             </div>
-        </div>
-    );
-}
 
-/** Image content component */
-function ImageContent({ url, filename }: { url: string; filename: string }) {
-    const [loaded, setLoaded] = useState(false);
-
-    return (
-        <div className="content-image">
-            {!loaded && <div className="content-loading">Loading image...</div>}
-            <img
-                src={url}
-                alt={filename}
-                onLoad={() => setLoaded(true)}
-                style={{ opacity: loaded ? 1 : 0 }}
-            />
-        </div>
-    );
-}
-
-/** Video content component */
-function VideoContent({ url }: { url: string }) {
-    const [loaded, setLoaded] = useState(false);
-
-    return (
-        <div className="content-video">
-            {!loaded && <div className="content-loading">Loading video...</div>}
-            <video
-                src={url}
-                controls
-                autoPlay
-                loop
-                muted
-                onLoadedData={() => setLoaded(true)}
-                style={{ opacity: loaded ? 1 : 0 }}
-            >
-                Your browser does not support video playback.
-            </video>
+            {/* Optional: Display project description at bottom */}
+            {project.about && (
+                <div className="project-footer">
+                    <p className="project-about">{project.about}</p>
+                    {project.collaborators && (
+                        <p className="project-collaborators">
+                            Collaborators: {project.collaborators}
+                        </p>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

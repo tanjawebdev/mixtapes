@@ -1,40 +1,53 @@
 import { useStore } from '../store';
+import { useStudentsData } from '../hooks/useStudentsData';
 import { ContentDisplay } from './ContentDisplay';
 import './PortfolioDisplay.css';
 
 /**
  * Main portfolio display component
  * 
- * Reads current student and state from store and displays the appropriate content.
- * Handles transitions between different content states.
+ * Reads current student and project from store and displays all content from that project folder.
+ * Project structure: /public/students/[studentID]/[projectNumber]/
  */
 export function PortfolioDisplay() {
     const currentStudentId = useStore((state) => state.currentStudentId);
-    const currentState = useStore((state) => state.currentState);
-    const studentData = useStore((state) =>
-        currentStudentId ? state.studentDataCache[currentStudentId] : null
-    );
-    const isLoading = useStore((state) => state.isLoading);
+    const currentProject = useStore((state) => state.currentProject);
+
+    // Use the new data loading system
+    const { getStudentById, loading: studentsLoading } = useStudentsData();
+
+    // Convert string studentId to number for lookup
+    const studentID = currentStudentId ? parseInt(currentStudentId) : null;
+    const student = studentID ? getStudentById(studentID) : null;
 
     // No student selected yet
-    console.log(currentState);
-    if (!currentStudentId || !currentState) {
+    if (!currentStudentId || currentProject === null) {
         return (
             <div className="portfolio-waiting">
                 <div className="waiting-message">
                     <h1>Portfolio Exhibition</h1>
-                    <p>Waiting for WebSocket trigger...</p>
+                    <p>Waiting for OSC trigger...</p>
                 </div>
             </div>
         );
     }
 
     // Loading state
-    if (isLoading || !studentData) {
+    if (studentsLoading) {
         return (
             <div className="portfolio-loading">
                 <div className="loading-spinner"></div>
-                <p>Loading portfolio...</p>
+                <p>Loading portfolio data...</p>
+            </div>
+        );
+    }
+
+    // Student not found
+    if (!student) {
+        return (
+            <div className="portfolio-error">
+                <h2>Student Not Found</h2>
+                <p>Could not find student with ID: {currentStudentId}</p>
             </div>
         );
     }
@@ -43,13 +56,14 @@ export function PortfolioDisplay() {
     return (
         <div className="portfolio-display">
             <div className="portfolio-header">
-                <h1>{studentData.name}</h1>
+                <h1>{student.surname} {student.name}</h1>
+                <p className="project-indicator">Project {currentProject}</p>
             </div>
 
             <div className="portfolio-content">
                 <ContentDisplay
                     studentId={currentStudentId}
-                    filename={currentState}
+                    projectNumber={currentProject}
                 />
             </div>
         </div>

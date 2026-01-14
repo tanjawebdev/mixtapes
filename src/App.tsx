@@ -1,5 +1,4 @@
 import { useOscData } from './hooks/useOscData';
-import { StudentDataLoader } from './components/StudentDataLoader';
 import { PortfolioDisplay } from './components/PortfolioDisplay';
 import { useStore } from './store';
 import './App.css';
@@ -11,11 +10,8 @@ import './App.css';
  * 
  * Architecture:
  * 1. OSC bridge connects automatically and listens for control messages
- * 2. Messages update Zustand store with current student and state
- * 3. StudentDataLoader ensures data is loaded and cached
- * 4. PortfolioDisplay renders the appropriate content
- * 
- * All content is loaded from /public/students/{id}/ directory
+ * 2. Messages update Zustand store with current student and project
+ * 3. PortfolioDisplay loads data and renders content based on store state
  */
 function App() {
   // Initialize OSC connection
@@ -31,9 +27,7 @@ function App() {
       </div>
 
       {/* Main portfolio display */}
-      <StudentDataLoader>
-        <PortfolioDisplay />
-      </StudentDataLoader>
+      <PortfolioDisplay />
     </div>
   );
 }

@@ -18,8 +18,9 @@ export const useOscData = () => {
     const wsRef = useRef<WebSocket | null>(null);
     const reconnectTimeoutRef = useRef<number | undefined>(undefined);
     const setCurrentStudent = useStore((state) => state.setCurrentStudent);
+    const navigateProject = useStore((state) => state.navigateProject);
+    const resetToInitial = useStore((state) => state.resetToInitial);
     const setOscConnected = useStore((state) => state.setWsConnected);
-    const currentState = useStore((state) => state.currentState);
 
     const connect = useCallback(() => {
         try {
@@ -44,12 +45,12 @@ export const useOscData = () => {
                     switch (address) {
                         case '/index': {
                             // Student index: "/index 11" (value 0-100)
+                            // Always reset to project 1 when changing students
                             const studentIndex = args[0]?.value;
                             if (studentIndex !== undefined) {
                                 const studentId = String(studentIndex);
-                                console.log(`🎯 Setting student: ${studentId}`);
-                                // Keep the current state when switching students
-                                setCurrentStudent(studentId, currentState || 'intro');
+                                console.log(`🎯 Setting student: ${studentId}, project: 1`);
+                                setCurrentStudent(studentId, 1); // Always start at project 1
                             }
                             break;
                         }
@@ -58,7 +59,12 @@ export const useOscData = () => {
                             // CD present sensor: "/cdpresent 1" or "/cdpresent 0"
                             const isPresent = args[0]?.value === 1;
                             console.log(`💿 CD Present: ${isPresent ? 'Yes' : 'No'}`);
-                            // TODO: You can add logic here to pause/resume based on CD presence
+
+                            // When CD is removed (0), reset to project 1
+                            if (!isPresent) {
+                                console.log('🔄 CD removed - resetting to project 1');
+                                resetToInitial();
+                            }
                             break;
                         }
 
@@ -67,7 +73,7 @@ export const useOscData = () => {
                             const pressed = args[0]?.value === 1;
                             if (pressed) {
                                 console.log(`⬅️  Previous button pressed`);
-                                // TODO: Implement previous state/student navigation
+                                navigateProject('prev');
                             }
                             break;
                         }
@@ -77,7 +83,7 @@ export const useOscData = () => {
                             const pressed = args[0]?.value === 1;
                             if (pressed) {
                                 console.log(`➡️  Next button pressed`);
-                                // TODO: Implement next state/student navigation
+                                navigateProject('next');
                             }
                             break;
                         }
@@ -116,7 +122,7 @@ export const useOscData = () => {
         } catch (error) {
             console.error('❌ Error connecting to OSC bridge:', error);
         }
-    }, [setCurrentStudent, setOscConnected, currentState]);
+    }, [setCurrentStudent, navigateProject, resetToInitial, setOscConnected]);
 
     useEffect(() => {
         connect();

@@ -1,22 +1,40 @@
-// Student data structure matching data.json format
-export interface StudentData {
-    name: string;
-    texts: string[];
-    media: string[];
+// Project data for each student portfolio item
+export interface Project {
+    title: string;
+    year: number;
+    type: string;
+    client: string;
+    collaborators: string;
+    about: string;
+    media?: string[]; // Auto-discovered from folder (images/videos)
 }
+
+// Student portfolio data
+export interface Student {
+    studentID: number;
+    nfcID: string;
+    surname: string;
+    name: string;
+    aboutMe: string;
+    skills: string[];
+    portfolioLink: string;
+    experiences: string[];
+    projects: Project[];
+}
+
+// Complete students data structure
+export type StudentsData = Student[];
 
 // WebSocket message format
 export interface WebSocketMessage {
     studentId: string;
-    state: string; // e.g., "text_intro.txt", "project1.jpg", "project1.mp4"
+    project?: number; // Optional: defaults to 1 when student is selected
 }
 
 // Application state
 export interface AppState {
     currentStudentId: string | null;
-    currentState: string | null;
-    studentDataCache: Record<string, StudentData>;
-    isLoading: boolean;
+    currentProject: number | null; // Project number 1-5
     error: string | null;
     wsConnected: boolean;
 }

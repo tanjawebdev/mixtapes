@@ -1,10 +1,11 @@
 import { create } from 'zustand';
-import type { AppState, StudentData } from './types';
+import type { AppState } from './types';
 
 interface StoreActions {
-    setCurrentStudent: (studentId: string, state: string) => void;
-    setStudentData: (studentId: string, data: StudentData) => void;
-    setLoading: (loading: boolean) => void;
+    setCurrentStudent: (studentId: string, project?: number) => void;
+    setCurrentProject: (projectNumber: number) => void;
+    navigateProject: (direction: 'next' | 'prev') => void;
+    resetToInitial: () => void;
     setError: (error: string | null) => void;
     setWsConnected: (connected: boolean) => void;
     reset: () => void;
@@ -13,10 +14,8 @@ interface StoreActions {
 type Store = AppState & StoreActions;
 
 const initialState: AppState = {
-    currentStudentId: null,
-    currentState: null,
-    studentDataCache: {},
-    isLoading: false,
+    currentStudentId: "1", // Set to empty string to trigger loading
+    currentProject: 1, // Set to null to trigger loading
     error: null,
     wsConnected: false,
 };
@@ -25,40 +24,58 @@ const initialState: AppState = {
  * Zustand store for managing application state
  * 
  * This is the single source of truth for:
- * - Current student ID and state (controlled by WebSocket) 
- * ---> TODO: state 
- * - Cached student data (for instant loading)
- * - Loading and error states
- * - WebSocket connection status
+ * - Current student ID and project number (controlled by OSC)
+ * - Error states
+ * - OSC connection status
+ * 
+ * Note: Student data is now loaded via useStudentsData hook
  */
 export const useStore = create<Store>((set) => ({
     ...initialState,
 
-    // Update current student and state (triggered by WebSocket)
-    setCurrentStudent: (studentId, state) =>
+    // Update current student and optionally set project (defaults to 1)
+    setCurrentStudent: (studentId, project = 1) =>
         set({
             currentStudentId: studentId,
-            currentState: state,
+            currentProject: project,
             error: null
         }),
 
-    // Cache loaded student data
-    setStudentData: (studentId, data) =>
+    // Set current project number directly
+    setCurrentProject: (projectNumber) =>
+        set({
+            currentProject: Math.max(1, Math.min(5, projectNumber)), // Clamp between 1-5
+            error: null
+        }),
+
+    // Navigate to next or previous project
+    navigateProject: (direction) =>
+        set((state) => {
+            const current = state.currentProject || 1;
+            const newProject = direction === 'next'
+                ? Math.min(5, current + 1)  // Max 5
+                : Math.max(1, current - 1); // Min 1
+
+            console.log(`📂 Navigating from project ${current} to ${newProject}`);
+
+            return {
+                currentProject: newProject,
+                error: null
+            };
+        }),
+
+    // Reset to project 1 (called when CD removed)
+    resetToInitial: () =>
         set((state) => ({
-            studentDataCache: {
-                ...state.studentDataCache,
-                [studentId]: data,
-            },
-            isLoading: false,
+            currentProject: state.currentStudentId ? 1 : null,
+            error: null
         })),
 
-    // Set loading state
-    setLoading: (loading) =>
-        set({ isLoading: loading }),
+    // Removed: setStudentData, setLoading (student data now managed by useStudentsData hook)
 
     // Set error state
     setError: (error) =>
-        set({ error, isLoading: false }),
+        set({ error }),
 
     // Set WebSocket connection status
     setWsConnected: (connected) =>
