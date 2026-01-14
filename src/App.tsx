@@ -1,36 +1,57 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useOscData } from './hooks/useOscData';
 import { PortfolioDisplay } from './components/PortfolioDisplay';
+import { CvDisplay } from './components/CvDisplay';
+import { AboutDisplay } from './components/AboutDisplay';
 import { useStore } from './store';
 import './App.css';
 
 /**
  * Main App Component
  * 
- * Portfolio Exhibition System - OSC-controlled student portfolio viewer
+ * Multi-Screen Portfolio Exhibition System
  * 
- * Architecture:
- * 1. OSC bridge connects automatically and listens for control messages
- * 2. Messages update Zustand store with current student and project
- * 3. PortfolioDisplay loads data and renders content based on store state
+ * Routes for 3-screen setup:
+ * - /cv        → Left screen: Student CV/resume
+ * - /portfolio → Center screen: Portfolio media gallery
+ * - /about     → Right screen: Current project description
+ * 
+ * All screens share the same Zustand store state (student ID, project number)
+ * and respond to OSC messages simultaneously.
  */
 function App() {
-  // Initialize OSC connection
+  // Initialize OSC connection (active across all routes)
   useOscData();
-  const oscConnected = useStore((state) => state.wsConnected); // Reusing wsConnected state for OSC
+  const oscConnected = useStore((state) => state.wsConnected);
 
   return (
-    <div className="app">
-      {/* OSC connection status indicator */}
-      <div className={`ws-status ${oscConnected ? 'connected' : 'disconnected'}`}>
-        <span className="ws-status-dot"></span>
-        {oscConnected ? 'OSC Connected' : 'OSC Disconnected'}
-      </div>
+    <BrowserRouter>
+      <div className="app">
+        {/* OSC connection status indicator (visible on all screens) */}
+        <div className={`ws-status ${oscConnected ? 'connected' : 'disconnected'}`}>
+          <span className="ws-status-dot"></span>
+          {oscConnected ? 'OSC Connected' : 'OSC Disconnected'}
+        </div>
 
-      {/* Main portfolio display */}
-      <PortfolioDisplay />
-    </div>
+        {/* Route configuration */}
+        <Routes>
+          {/* Left screen: CV */}
+          <Route path="/cv" element={<CvDisplay />} />
+
+          {/* Center screen: Portfolio */}
+          <Route path="/portfolio" element={<PortfolioDisplay />} />
+
+          {/* Right screen: About */}
+          <Route path="/about" element={<AboutDisplay />} />
+
+          {/* Default: redirect to portfolio (center screen) */}
+          <Route path="/" element={<Navigate to="/portfolio" replace />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
 export default App;
+
 
