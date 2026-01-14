@@ -14,8 +14,8 @@ interface StoreActions {
 type Store = AppState & StoreActions;
 
 const initialState: AppState = {
-    currentStudentId: "1", // Set to empty string to trigger loading
-    currentProject: 1, // Set to null to trigger loading
+    currentStudentId: "", // Set to empty string to trigger loading
+    currentProject: null, // Set to null to trigger loading
     error: null,
     wsConnected: false,
 };
