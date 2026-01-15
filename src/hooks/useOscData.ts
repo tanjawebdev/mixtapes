@@ -59,9 +59,11 @@ export const useOscData = () => {
                             // CD present sensor: "/cdpresent 1" or "/cdpresent 0"
                             const isPresent = args[0]?.value === 1;
                             console.log(`💿 CD Present: ${isPresent ? 'Yes' : 'No'}`);
+                            // TODO: add isPresent state to store.ts
 
                             // When CD is removed (0), reset to project 1
                             if (!isPresent) {
+                            
                                 console.log('🔄 CD removed - resetting to project 1');
                                 resetToInitial();
                             }
@@ -111,7 +113,6 @@ export const useOscData = () => {
             ws.onclose = () => {
                 console.log('🔌 Disconnected from OSC bridge');
                 setOscConnected(false);
-
                 // Attempt to reconnect after 3 seconds
                 reconnectTimeoutRef.current = window.setTimeout(() => {
                     console.log('🔄 Attempting to reconnect to OSC bridge...');
@@ -136,5 +137,5 @@ export const useOscData = () => {
                 wsRef.current.close();
             }
         };
-    }, [connect]);
+    }, []);
 };

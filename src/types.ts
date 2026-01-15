@@ -6,7 +6,6 @@ export interface Project {
     client: string;
     collaborators: string;
     about: string;
-    media?: string[]; // Auto-discovered from folder (images/videos)
 }
 
 // Student portfolio data
@@ -22,8 +21,6 @@ export interface Student {
     projects: Project[];
 }
 
-// Complete students data structure
-export type StudentsData = Student[];
 
 // WebSocket message format
 export interface WebSocketMessage {
