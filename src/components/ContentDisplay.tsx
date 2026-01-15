@@ -67,7 +67,7 @@ export function ContentDisplay({ studentId, projectNumber }: ContentDisplayProps
         <div className="project-content">
             {/* Optional: Display project metadata */}
             <div className="project-header">
-                <h2 className="project-title">{project.title}</h2>
+                <h2 className="project-title">{project.title}</h2> test
                 <p className="project-meta">
                     {project.year} · {project.type}
                 </p>

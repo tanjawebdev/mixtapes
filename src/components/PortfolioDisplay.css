@@ -60,10 +60,15 @@
 }
 
 .portfolio-header {
-  padding: 2rem;
-  background: rgba(0, 0, 0, 0.5);
+  padding: 9px;
+  background: white;
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--color-text-dark);
+}
+
+.portfolio-header-inner {
+  background: pink;
 }
 
 .portfolio-header h1 {

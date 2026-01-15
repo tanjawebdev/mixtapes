@@ -56,8 +56,12 @@ export function PortfolioDisplay() {
     return (
         <div className="portfolio-display">
             <div className="portfolio-header">
-                <h1>{student.surname} {student.name}</h1>
-                <p className="project-indicator">Project {currentProject}</p>
+                <div className="portfolio-header-inner">
+                    <h4 className="portfolio-title">Portfolio</h4>
+                    <div className="project-icons-pagination">folder icons</div>
+                    <h4 className="portfolio-pagination-text">{currentProject} I {student.projects.length}</h4>
+                    <div className="portfolio-close">close icon</div>
+                </div>
             </div>
 
             <div className="portfolio-content">
