@@ -1,6 +1,7 @@
 import { useStore } from '../store';
 import { useStudentsData } from '../hooks/useStudentsData';
 import './CvDisplay.css';
+import closeIcon from '../assets/close.svg';
 
 /**
  * CV Display Component
@@ -53,46 +54,90 @@ export function CvDisplay() {
     // Display CV
     return (
         <div className="cv-display">
-            <div className="cv-header">
-                <h1 className="cv-name">{student.surname} {student.name}</h1>
-                {student.portfolioLink && (
-                    <a href={`https://${student.portfolioLink}`} target="_blank" rel="noopener noreferrer" className="cv-portfolio-link">
-                        {student.portfolioLink}
-                    </a>
-                )}
+            <div className="cv-display-inner">
+                <div className="cv-header">
+                    <h3>Curriculum Vitae</h3>
+                    <img src={closeIcon} alt="Close" />
+                </div>
+
+                <div className="cv-top-section">
+                    <div className="cv-photo-section">
+                        <img src={`students/${studentID}/portrait.jpg`} alt="Student" />
+                    </div>
+                    <div className="cv-title-section">
+                        <div className="cv-title-header">
+                            <h5>{student.major}</h5>
+                            <img src={closeIcon} alt="Close" />
+                        </div>
+                        <div className="cv-title-name">
+                            <h1 className="cv-name">{student.surname} {student.name}</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="cv-middle-section">
+                    {/* About Me Section */}
+                    {student.aboutMe && (
+                        <section className="cv-about">
+                            <div className="cv-header-about">
+                                <h5>About Me</h5>
+                                <img src={closeIcon} alt="Close" />
+                            </div>
+                            <div className="cv-about-content">
+                                <div className="cv-about-text">
+                                    <p>{student.aboutMe}</p>
+                                </div>
+                            </div>
+                        </section>
+                    )}
+
+                    {/* Skills Section */}
+                    {student.skills && student.skills.length > 0 && (
+                        <section className="cv-skills">
+                            <div className="cv-header-skills">
+                                <h5>Skills</h5>
+                                <img src={closeIcon} alt="Close" />
+                            </div>
+                            <div className="cv-skills-content">
+                                <ul className="skills-list">
+                                    {student.skills.map((skill, index) => (
+                                        <li key={index}>
+                                            {skill}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </section>
+                    )}
+                </div>
+
+                <div className="cv-bottom-section">
+                    {/* Experience Section */}
+                    {student.experiences && student.experiences.length > 0 && (
+                        <section className="cv-experiences">
+                            <div className="cv-header-experiences">
+                                <h5>Experience</h5>
+                                <img src={closeIcon} alt="Close" />
+                            </div>
+                            <div className="experiences-content">
+                                {student.experiences.map((experience, index) => (
+                                    <div key={index} className="experience-item">
+                                        <div className="experience-year-wrapper">
+                                            <div className="experience-year">
+                                                <span> {experience.years}</span>
+                                            </div>
+                                        </div>
+                                        <div className="experience-company-wrapper">
+                                            <div className="experience-company">{experience.company}</div>
+                                        </div>
+                                        <div className="experience-position">{experience.position}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+                </div>
             </div>
-
-            {/* About Me Section */}
-            {student.aboutMe && (
-                <section className="cv-section cv-about">
-                    <h2>About Me</h2>
-                    <p>{student.aboutMe}</p>
-                </section>
-            )}
-
-            {/* Skills Section */}
-            {student.skills && student.skills.length > 0 && (
-                <section className="cv-section cv-skills">
-                    <h2>Skills</h2>
-                    <ul className="skills-list">
-                        {student.skills.map((skill, index) => (
-                            <li key={index}>{skill}</li>
-                        ))}
-                    </ul>
-                </section>
-            )}
-
-            {/* Experience Section */}
-            {student.experiences && student.experiences.length > 0 && (
-                <section className="cv-section cv-experiences">
-                    <h2>Experience</h2>
-                    <ul className="experiences-list">
-                        {student.experiences.map((experience, index) => (
-                            <li key={index}>{experience}</li>
-                        ))}
-                    </ul>
-                </section>
-            )}
         </div>
     );
 }

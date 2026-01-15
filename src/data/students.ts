@@ -12,6 +12,7 @@ export const studentsData: Student[] = [
         nfcID: "04:A3:2B:C2:5E:61:80",
         surname: "John",
         name: "Doe",
+        major: "Interaction Design",
         aboutMe: "Curious interaction design student passionate about human-centered solutions. I enjoy transforming research insights into intuitive digital experiences through prototyping, testing, and thoughtful visual storytelling, always aiming to create meaningful, accessible, and engaging interactions for diverse users.",
         skills: [
             "Visual Identity Design",
@@ -22,10 +23,21 @@ export const studentsData: Student[] = [
         ],
         portfolioLink: "joedoe-portfolio.com",
         experiences: [
-            "Year: written 20xy or 20xy-xy Company up to 30 characters Position up to 34 characters",
-            "2024-26 FH Joanneum Interaction Design Student",
-            "2024 Company XYZ Visual Designer",
-            "2023-ongoing Freelance UI UX Designer"
+            {
+                years: "2025-new",
+                company: "pixelart",
+                position: "Visual Designer",
+            },
+            {
+                years: "2024",
+                company: "test",
+                position: "Information",
+            },
+            {
+                years: "2023",
+                company: "gowest",
+                position: "Visual",
+            }
         ],
         projects: [
             {
@@ -75,6 +87,7 @@ export const studentsData: Student[] = [
         nfcID: "04:A3:2B:C2:5E:61:81",
         surname: "Jaqueline",
         name: "Boe",
+        major: "Interaction Design",
         aboutMe: "Curious interaction design student passionate about human-centered solutions. I enjoy transforming research insights into intuitive digital experiences through prototyping, testing, and thoughtful visual storytelling, always aiming to create meaningful, accessible, and engaging interactions for diverse users.",
         skills: [
             "Visual Identity Design",
@@ -85,10 +98,21 @@ export const studentsData: Student[] = [
         ],
         portfolioLink: "joedoe-portfolio.com",
         experiences: [
-            "Year: written 20xy or 20xy-xy Company up to 30 characters Position up to 34 characters",
-            "2024-26 FH Joanneum Interaction Design Student",
-            "2024 Company XYZ Visual Designer",
-            "2023-ongoing Freelance UI UX Designer"
+            {
+                years: "2025-new",
+                company: "pixelart",
+                position: "Visual Designer",
+            },
+            {
+                years: "2024",
+                company: "gowest",
+                position: "Visual Designer",
+            },
+            {
+                years: "2023",
+                company: "test",
+                position: "Visual Designer",
+            },
         ],
         projects: [
             {

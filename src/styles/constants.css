@@ -11,9 +11,12 @@
      ======================================== */
 
     /* Primary Colors */
-    --color-primary: #000a0c;
-    --color-primary-light: #1a2428;
-    --color-primary-dark: #000000;
+    --color-primary: #FF3B93;
+    --color-primary-grey: #404040;
+    --color-primary-light: #FD97C6;
+    --color-primary-lighter: #FFDFEC;
+    --color-primary-dark: #000A0C;
+    --color-primary-white: #FFFFFF;
 
     /* Background Colors */
     --color-bg-dark: #000000;

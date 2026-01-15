@@ -8,6 +8,12 @@ export interface Project {
     about: string;
 }
 
+export interface Experience {
+    years: string;
+    company: string;
+    position: string;
+}
+
 // Student portfolio data
 export interface Student {
     studentID: number;
@@ -17,8 +23,9 @@ export interface Student {
     aboutMe: string;
     skills: string[];
     portfolioLink: string;
-    experiences: string[];
+    experiences: Experience[];
     projects: Project[];
+    major: string;
 }
 
 
