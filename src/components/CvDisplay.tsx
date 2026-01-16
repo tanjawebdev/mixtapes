@@ -1,6 +1,5 @@
 import { useStore } from '../store';
-import { useStudentsData, getMajorFullName } from '../hooks/useStudentsData';
-import { useMemo } from 'react';
+import { useStudentsData, getMajorFullName, getStudentBackgroundNumber } from '../hooks/useStudentsData';
 import './CvDisplay.css';
 import closeIcon from '../assets/close.svg';
 import discIcon from '../assets/cd.gif';
@@ -22,8 +21,8 @@ export function CvDisplay() {
     const studentID = currentStudentId ? parseInt(currentStudentId) : null;
     const student = studentID ? getStudentById(studentID) : null;
 
-    // Generate random background number (1-4) - stable across re-renders
-    const randomBgNumber = useMemo(() => Math.floor(Math.random() * 4) + 1, [studentID]);
+    // Get consistent background number for this student (1-4)
+    const randomBgNumber = studentID ? getStudentBackgroundNumber(studentID) : 1;
 
     // No student selected yet
     if (!currentStudentId) {

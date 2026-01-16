@@ -15,6 +15,17 @@ export const getMajorFullName = (major: string): string => {
 };
 
 /**
+ * Get a consistent random background number (1-4) for a student
+ * Uses a simple hash of studentID to ensure the same student always gets the same background
+ */
+export const getStudentBackgroundNumber = (studentID: number): number => {
+    // Simple hash: use studentID to generate a consistent "random" number
+    // This ensures both CvDisplay and AboutDisplay use the same background
+    const hash = (studentID * 2654435761) % 4;
+    return hash + 1; // Returns 1, 2, 3, or 4
+};
+
+/**
  * Hook to access student data
  * 
  * This hook provides access to all student portfolio data with type safety.

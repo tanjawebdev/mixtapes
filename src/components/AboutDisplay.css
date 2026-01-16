@@ -1,79 +1,258 @@
 .about-display {
-    min-height: 100vh;
-    padding: 4rem 2rem;
-    max-width: 900px;
-    margin: 0 auto;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    color: white;
+    height: 1080px;
+    width: 1920px;
+    padding: 47px 79px 34px 79px;
+    background: var(--color-primary-lighter);
+    color: var(--color-primary-dark);
+    position: relative;
 }
 
-.about-header {
-    margin-bottom: 3rem;
+.about-display-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
 }
 
-.project-title {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    line-height: 1.2;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+.about-display-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.project-meta {
-    font-size: 1.2rem;
-    opacity: 0.95;
+.about-display-inner {
+    position: relative;
+    z-index: 1;
+    height: 100%;
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    flex-direction: column;
+    gap: 24px;
 }
 
-.meta-separator {
-    opacity: 0.6;
+/* Main Project Description Container */
+.about-main-container {
+    background-color: var(--color-primary-lighter);
+    border: 2px solid var(--color-primary-dark);
+    box-shadow: var(--color-primary-dark) 2px 2px 0px;
 }
 
-.about-description {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    padding: 2.5rem;
-    border-radius: 12px;
-    margin-bottom: 2rem;
+.about-main-header {
+    background-color: var(--color-primary);
+    padding: 12px 20px;
+    color: white;
+    border-bottom: 2px solid var(--color-primary-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.about-description p {
-    font-size: 1.2rem;
-    line-height: 1.8;
-    margin: 0;
+.about-main-header img {
+    width: 47px;
+    height: 40px;
+}
+
+.about-content-wrapper {
+    display: flex;
+    gap: 24px;
+    margin: 12px;
+    height: 328px;
+
+}
+
+/* Project Title Section */
+.about-title-section {
+    background-color: var(--color-primary-light);
+    border: 2px solid var(--color-primary);
+    box-shadow: var(--color-primary-dark) 2px 2px 0px;
+    display: flex;
+    flex-direction: column;
+    width: 1288px;
+}
+
+.about-title-header {
+    background-color: var(--color-primary-light);
+    padding: 12px 14px;
+    border-bottom: 2px solid var(--color-primary);
+    box-shadow: var(--color-primary-dark) 0px 2px 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.about-title-header img,
+.about-type-header img,
+.about-description-header img {
+    width: 47px;
+    height: 40px;
+}
+
+.about-title-content {
+    flex: 1;
+    background-color: var(--color-primary-lighter);
+    border: 2px solid var(--color-primary-light);
+    margin: 2px;
+    padding: 24px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative;
+    align-items: end;
+}
+
+.about-title-content h2 {
+    max-width: 90%;
+    line-height: 1;
+}
+
+.primary-button {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    padding: 12px 16px;
+    font-family: 'Chicago', sans-serif;
+    font-size: 16px;
+    border: 2px solid var(--color-primary-dark);
+    box-shadow: var(--color-primary-dark) 2px 2px 0px;
+}
+
+.primary-button span {
+    border: 2px solid var(--color-primary);
+    padding: 5px 10px;
+}
+
+.about-year-badge {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+}
+
+
+
+/* Type of Project Section */
+.about-type-section {
+    width: 426px;
+    background-color: var(--color-primary-light);
+    border: 2px solid var(--color-primary);
+    box-shadow: var(--color-primary-dark) 2px 2px 0px;
+    display: flex;
+    flex-direction: column;
+}
+
+.about-type-header {
+    background-color: var(--color-primary-light);
+    padding: 12px 14px;
+    border-bottom: 2px solid var(--color-primary);
+    box-shadow: var(--color-primary-dark) 0px 2px 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.about-type-content {
+    flex: 1;
+    background-color: var(--color-primary-light);
+    border: 2px solid var(--color-primary-light);
+    margin: 2px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    width: 419px;
+}
+
+.type-item {
+    background-color: var(--color-primary-lighter);
+    border: 2px solid var(--color-primary-dark);
+    padding: 12px 16px;
+    text-align: center;
+    font-family: 'ABC Pelikan', sans-serif;
+    font-size: 28px;
+    color: var(--color-primary-dark);
+}
+
+/* About the Project Section */
+.about-description-container {
+    flex: 1;
+    background-color: var(--color-primary-lighter);
+    border: 2px solid var(--color-primary-dark);
+    box-shadow: var(--color-primary-dark) 2px 2px 0px;
+    display: flex;
+    flex-direction: column;
+    height: 573px;
+    margin: 0 13px 13px 13px;
+}
+
+.about-client {
+    margin-bottom: 29px;
+}
+
+.about-description-header {
+    background-color: var(--color-primary-light);
+    padding: 12px 14px;
+    border-bottom: 2px solid var(--color-primary);
+    box-shadow: var(--color-primary-dark) 0px 2px 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.about-description-content {
+    flex: 1;
+    background-color: var(--color-primary-lighter);
+    border: 2px solid var(--color-primary-light);
+    margin: 2px;
+    padding: 28px;
+    position: relative;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+
+.about-star-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+}
+
+.about-star-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.about-description-text {
+    font-family: 'Chicago', sans-serif;
+    font-size: 36px;
+    line-height: 1.5;
+    margin: 0 0 24px 0;
+    color: var(--color-primary-dark);
 }
 
 .about-collaborators {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    padding: 1.5rem 2rem;
-    border-radius: 12px;
-    margin-bottom: 2rem;
+    font-family: 'Chicago', sans-serif;
+    position: absolute;
+    right: 23px;
+    bottom: 16px;
+    font-size: 28px;
 }
 
-.about-collaborators h3 {
-    font-size: 1.3rem;
-    margin-bottom: 0.5rem;
-    opacity: 0.9;
+.collaborators-label {
+    color: var(--color-primary);
+    font-weight: bold;
+    font-size: 28px;
+    margin-right: 8px;
 }
 
-.about-collaborators p {
-    font-size: 1.1rem;
-    margin: 0;
-}
-
-.about-footer {
-    text-align: center;
-    padding-top: 2rem;
-    border-top: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.student-credit {
-    font-size: 1.1rem;
-    font-style: italic;
-    opacity: 0.9;
+.collaborators-names {
+    color: var(--color-primary-dark);
+    text-transform: uppercase;
+    font-size: 28px;
 }
 
 /* Loading/Waiting/Error states */
