@@ -1,8 +1,8 @@
-import type { Student } from '../types';
+import type { Student } from "../types";
 
 /**
  * Student portfolio data
- * 
+ *
  * This is the central data source for all student information.
  * TypeScript provides compile-time type checking to ensure data validity.
  */

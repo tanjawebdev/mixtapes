@@ -1,11 +1,11 @@
 // Project data for each student portfolio item
 export interface Project {
-    title: string;
-    year: number;
-    type: string;
-    client: string;
-    collaborators: string;
-    about: string;
+  title: string;
+  year: string;
+  type: string;
+  client: string;
+  collaborators: string;
+  about: string;
 }
 
 export interface Experience {
@@ -28,32 +28,32 @@ export interface Student {
     major: string;
 }
 
-
 // WebSocket message format
 export interface WebSocketMessage {
-    studentId: string;
-    project?: number; // Optional: defaults to 1 when student is selected
+  studentId: string;
+  project?: number; // Optional: defaults to 1 when student is selected
 }
 
 // Application state
 export interface AppState {
-    currentStudentId: string | null;
-    currentProject: number | null; // Project number 1-5
-    error: string | null;
-    wsConnected: boolean;
+  currentStudentId: string | null;
+  currentProject: number | null; // Project number 1-5
+  error: string | null;
+  wsConnected: boolean;
 }
 
 // Content type detection
-export type ContentType = 'text' | 'image' | 'video' | 'unknown';
+export type ContentType = "text" | "image" | "video" | "unknown";
 
 export function getContentType(filename: string): ContentType {
-    const ext = filename.split('.').pop()?.toLowerCase();
+  const ext = filename.split(".").pop()?.toLowerCase();
 
-    if (!ext) return 'unknown';
+  if (!ext) return "unknown";
 
-    if (['txt', 'md'].includes(ext)) return 'text';
-    if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext)) return 'image';
-    if (['mp4', 'webm', 'mov', 'avi'].includes(ext)) return 'video';
+  if (["txt", "md"].includes(ext)) return "text";
+  if (["jpg", "jpeg", "png", "gif", "webp", "svg"].includes(ext))
+    return "image";
+  if (["mp4", "webm", "mov", "avi"].includes(ext)) return "video";
 
-    return 'unknown';
+  return "unknown";
 }

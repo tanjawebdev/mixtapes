@@ -1,58 +1,44 @@
-import { useStore } from '../store';
-import { useStudentsData } from '../hooks/useStudentsData';
-import { ContentDisplay } from './ContentDisplay';
-import './PortfolioDisplay.css';
+import { useStore } from "../store";
+import { useStudentsData } from "../hooks/useStudentsData";
+import { ContentDisplay } from "./ContentDisplay";
+import { IdleScreen } from "./IdleScreen";
+import "./PortfolioDisplay.css";
 
 /**
  * Main portfolio display component
- * 
- * Reads current student and project from store and displays all content from that project folder.
- * Project structure: /public/students/[studentID]/[projectNumber]/
  */
 export function PortfolioDisplay() {
-    const currentStudentId = useStore((state) => state.currentStudentId);
-    const currentProject = useStore((state) => state.currentProject);
+  const currentStudentId = useStore((state) => state.currentStudentId);
+  const currentProject = useStore((state) => state.currentProject);
 
-    // Use the new data loading system
-    const { getStudentById, loading: studentsLoading } = useStudentsData();
+  // KORREKTUR 1: Den richtigen Namen aus dem Store verwenden ('wsConnected')
+  const wsConnected = useStore((state) => state.wsConnected);
 
-    // Convert string studentId to number for lookup
-    const studentID = currentStudentId ? parseInt(currentStudentId) : null;
-    const student = studentID ? getStudentById(studentID) : null;
+  const { getStudentById, loading: studentsLoading } = useStudentsData();
 
-    // No student selected yet
-    if (!currentStudentId || currentProject === null) {
-        return (
-            <div className="portfolio-waiting">
-                <div className="waiting-message">
-                    <h1>Portfolio Exhibition</h1>
-                    <p>Waiting for OSC trigger...</p>
-                </div>
-            </div>
-        );
-    }
+  // --- 1. IDLE STATE CHECK ---
+  // Wenn currentStudentId leer ("") oder null ist -> Zeige IdleScreen
+  if (!currentStudentId || currentStudentId === "") {
+    return <IdleScreen isConnected={wsConnected} />;
+  }
 
-    // Loading state
-    if (studentsLoading) {
-        return (
-            <div className="portfolio-loading">
-                <div className="loading-spinner"></div>
-                <p>Loading portfolio data...</p>
-            </div>
-        );
-    }
+  // --- 2. LOADING STATE ---
+  if (studentsLoading) {
+    return (
+      <div className="portfolio-loading">
+        <div className="loading-spinner"></div>
+        <p>Loading portfolio data...</p>
+      </div>
+    );
+  }
 
-    // Student not found
-    if (!student) {
-        return (
-            <div className="portfolio-error">
-                <h2>Student Not Found</h2>
-                <p>Could not find student with ID: {currentStudentId}</p>
-            </div>
-        );
-    }
+  // Daten vorbereiten (erst jetzt, da wir wissen, dass eine ID existiert)
+  const studentID = parseInt(currentStudentId);
+  const student = getStudentById(studentID);
 
-    // Display content
+  // --- 3. ERROR STATE ---
+  // ID ist da, aber kein Schüler in der Datenbank gefunden
+  if (!student) {
     return (
         <div className="portfolio-display">
             {/* TODO: add idle screen if no student selected */}

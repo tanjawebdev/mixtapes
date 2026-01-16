@@ -9,7 +9,7 @@
   --block-width: 250px;
   --block-height: 250px;
   --overlap: -80px;
-  --speed: 20s;
+  --speed: 120s;
   --tilt-angle: -15deg;
   --tilt-angle-inverse: 15deg;
 }
@@ -55,7 +55,8 @@
 }
 
 .idle-container .idle-wrapper .top-bar .cross-icon {
-  height: auto;
+  height: 40px;
+  width: 40px;
 }
 
 .idle-container .idle-wrapper .marquee-wrapper {
