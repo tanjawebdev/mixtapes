@@ -5,6 +5,46 @@
  */
 
 /* ========================================
+   CUSTOM FONTS
+   ======================================== */
+
+/* ABC Pelikan - Regular */
+@font-face {
+    font-family: 'ABC Pelikan';
+    src: url('../assets/fonts/ABCPelikan-Regular-Trial.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Chicago */
+@font-face {
+    font-family: 'Chicago';
+    src: url('../assets/fonts/Chicago.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* PLANK */
+@font-face {
+    font-family: 'PLANK';
+    src: url('../assets/fonts/PLANK___.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Space Mono - Bold */
+@font-face {
+    font-family: 'Space Mono';
+    src: url('../assets/fonts/SpaceMono-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ========================================
    HEADINGS
    ======================================== */
 
@@ -26,6 +66,12 @@ h1 {
     /* 48px */
     font-weight: var(--font-weight-bold);
     line-height: 1.1;
+    font-family: 'PLANK';
+    color: var(--color-primary-lighter);
+    text-stroke-width: 5px;
+    paint-order: stroke fill;
+    text-shadow: -8px 12px 0 var(--color-primary);
+    -webkit-text-stroke: 0.2em var(--color-primary);
 }
 
 h2 {

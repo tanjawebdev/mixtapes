@@ -92,9 +92,9 @@
 }
 
 .cv-name {
-    color: var(--color-primary-dark);
     transform: rotate(-15deg);
-    text-align: center;
+    text-align: left;
+    line-height: 44px;
 }
 
 .cv-section {

@@ -70,7 +70,7 @@ export function CvDisplay() {
                             <img src={closeIcon} alt="Close" />
                         </div>
                         <div className="cv-title-name">
-                            <h1 className="cv-name">{student.surname} {student.name}</h1>
+                            <h1 className="cv-name">{student.surname}<br /> {student.name}</h1>
                         </div>
                     </div>
                 </div>
@@ -138,6 +138,6 @@ export function CvDisplay() {
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
