@@ -37,6 +37,11 @@ export const studentsData: Student[] = [
                 years: "2023",
                 company: "gowest",
                 position: "Visual",
+            },
+            {
+                years: "2022",
+                company: "test",
+                position: "Information",
             }
         ],
         projects: [

@@ -2,6 +2,8 @@ import { useStore } from '../store';
 import { useStudentsData } from '../hooks/useStudentsData';
 import './CvDisplay.css';
 import closeIcon from '../assets/close.svg';
+import discIcon from '../assets/cd.gif';
+import starIcon from '../assets/chrome-star.png';
 
 /**
  * CV Display Component
@@ -61,6 +63,20 @@ export function CvDisplay() {
                 </div>
 
                 <div className="cv-top-section">
+                    <div className="cv-cover-section">
+                        <div className="cv-cover-image">
+                            <img src={`covers/${studentID}.jpg`} />
+                        </div>
+                        <div className="cv-cover-disc">
+                            <img src={discIcon} alt="Student" />
+                        </div>
+                    </div>
+                    <div className="cv-star-element">
+                        <img src={starIcon} alt="Student" />
+                    </div>
+                    <div className="cv-major-element">
+                        <img src={`majors/${student.major}_3d.png`} />
+                    </div>
                     <div className="cv-photo-section">
                         <img src={`students/${studentID}/portrait.jpg`} alt="Student" />
                     </div>
@@ -109,6 +125,10 @@ export function CvDisplay() {
                             </div>
                         </section>
                     )}
+
+                    <div className="cv-star-element-2">
+                        <img src={starIcon} alt="Student" />
+                    </div>
                 </div>
 
                 <div className="cv-bottom-section">

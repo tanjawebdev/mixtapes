@@ -55,6 +55,8 @@ export function PortfolioDisplay() {
     // Display content
     return (
         <div className="portfolio-display">
+            {/* TODO: add idle screen if no student selected */}
+
             <div className="portfolio-header">
                 <div className="portfolio-header-inner">
                     <h4 className="portfolio-title">Portfolio</h4>
@@ -70,6 +72,6 @@ export function PortfolioDisplay() {
                     projectNumber={currentProject}
                 />
             </div>
-        </div>
+        </div >
     );
 }
