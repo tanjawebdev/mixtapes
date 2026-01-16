@@ -2,6 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import "./IdleScreen.css";
 import cross from "../../public/Icons/Closing-Icon.png";
 import disk from "../../public/Icons/disk.png";
+import "../styles/typography.css";
 
 interface IdleScreenProps {
   isConnected: boolean;
@@ -60,11 +61,13 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({ isConnected }) => {
     <div className="idle-container">
       <div className="idle-wrapper">
         <div className="top-bar">
-          <p>portfoliomachine</p>
-          <img src={cross} alt="Cross Icon" className="cross-icon" />
+          <p>Portfolio Machine</p>
+          <div className="cross-image-wrapper">
+            <img src={cross} alt="Cross Icon" className="cross-icon" />
+          </div>
         </div>
 
-        <div className="marquee-wrapper">
+        {/* <div className="marquee-wrapper">
           <div className="marquee-track">
             {displayImages.map((coverImg, index) => (
               <div key={index} className="image-block">
@@ -72,7 +75,7 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({ isConnected }) => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         <div className="insert-disk-container">
           <div className="disk-img-container">

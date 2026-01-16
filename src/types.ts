@@ -1,7 +1,7 @@
 // Project data for each student portfolio item
 export interface Project {
   title: string;
-  year: string;
+  year: number;
   type: string;
   client: string;
   collaborators: string;
@@ -9,23 +9,23 @@ export interface Project {
 }
 
 export interface Experience {
-    years: string;
-    company: string;
-    position: string;
+  years: string;
+  company: string;
+  position: string;
 }
 
 // Student portfolio data
 export interface Student {
-    studentID: number;
-    nfcID: string;
-    surname: string;
-    name: string;
-    aboutMe: string;
-    skills: string[];
-    portfolioLink: string;
-    experiences: Experience[];
-    projects: Project[];
-    major: string;
+  studentID: number;
+  nfcID: string;
+  surname: string;
+  name: string;
+  aboutMe: string;
+  skills: string[];
+  portfolioLink: string;
+  experiences: Experience[];
+  projects: Project[];
+  major: string;
 }
 
 // WebSocket message format

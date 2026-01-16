@@ -1,185 +1,36 @@
-:root {
-  --bg-dark: #121212;
-  --accent-color: #ffffff;
-  --c-grey-300: #cbcbcb;
-  --c-grey-400: #bbbbbb;
-  --c-grey-600: #5b5b5b;
-  --c-pure-blue: #0000ff;
-
-  --block-width: 250px;
-  --block-height: 250px;
-  --overlap: -80px;
-  --speed: 120s;
-  --tilt-angle: -15deg;
-  --tilt-angle-inverse: 15deg;
-}
-
 .idle-container {
+  background-color: var(--color-primary-dark);
   width: 100vw;
   height: 100vh;
-  background-color: var(--bg-dark);
-  overflow: hidden;
-  position: relative;
-  font-family: "Chicago", sans-serif;
 }
-
 .idle-container .idle-wrapper {
-  height: 82%;
-  width: 90%;
-  border: 3px solid var(--c-grey-300);
-  border-bottom: 20px solid var(--c-grey-300);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  overflow: hidden;
-  transform: translate(-50%, -50%);
+  height: 100%;
+  width: auto;
+  background-color: var(--color-primary-dark);
+  border: solid var(--color-primary-dark) 2px;
 }
-
-.idle-container .idle-wrapper .bar-low {
-  background-color: var(--c-pure-blue);
-}
-
-.idle-container .idle-wrapper .top-bar {
-  background-color: var(--c-grey-400);
-  border: 3px solid var(--c-grey-300);
+.top-bar {
+  width: 100%;
+  height: 50px;
+  background-color: var(--color-primary);
+  padding: 9px;
+  border: solid var(--color-primary-dark) 2px;
   display: flex;
-  flex-direction: row;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
 }
-
-.idle-container .idle-wrapper .top-bar p {
-  font-size: 24px;
-  text-transform: uppercase;
-  color: var(--bg-dark);
-}
-
-.idle-container .idle-wrapper .top-bar .cross-icon {
-  height: 40px;
+.top-bar .cross-image-wrapper {
   width: 40px;
+  height: 40px;
 }
-
-.idle-container .idle-wrapper .marquee-wrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 200vw;
-  height: 100vh;
-  transform: translate(-50%, -50%) rotate(var(--tilt-angle));
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  pointer-events: none;
-}
-
-.idle-container .idle-wrapper .marquee-track {
-  display: flex;
-  gap: 0;
-  width: max-content;
-  animation: scrollDiagonal var(--speed) linear infinite;
-  padding: 50px 0;
-}
-
-.idle-container .idle-wrapper .marquee-track .image-block {
-  width: var(--block-width);
-  height: var(--block-height);
-  flex-shrink: 0;
-  margin-right: var(--overlap);
-  transform: rotate(var(--tilt-angle-inverse));
-  box-shadow: -15px 15px 25px rgba(0, 0, 0, 0.6);
-  background: #222;
-  overflow: hidden;
-  transition: transform 0.3s ease, z-index 0s;
-}
-
-.idle-container .idle-wrapper .marquee-track .image-block img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.idle-container .idle-wrapper .insert-disk-container {
-  background-color: var(--c-grey-300);
-  border: 3px solid var(--c-grey-600);
-  padding: 8px 12px;
-  position: absolute;
-  bottom: 30px;
-  right: 30px;
-}
-
-.idle-container .idle-wrapper .insert-disk-container .inner-container {
-  border: 3px solid var(--c-grey-600);
-}
-
-.idle-container .idle-wrapper .insert-disk-container .inner-container p {
-  padding: 2px 24px;
-  font-size: 30px;
-}
-
-.idle-container .idle-wrapper .insert-disk-container .disk-img-container {
-  height: 92px;
-  width: 92px;
-  position: absolute;
-  left: -70px;
-  top: -10px;
-}
-
-.idle-container .idle-wrapper .insert-disk-container .disk-img-container img {
+.top-bar .cross-image-wrapper img {
   width: 100%;
   height: 100%;
 }
-
-.idle-container .idle-content {
-  position: absolute;
-  z-index: 50;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: white;
-  padding: 2rem;
-  border-radius: 20px;
+.top-bar p {
+  font-family: "Space Mono";
+  color: var(--color-primary-white);
+  font-size: 32px;
+  margin: 0;
 }
-
-.idle-container .idle-content h1 {
-  font-size: 4rem;
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-}
-
-.idle-container .idle-content p {
-  font-size: 1.5rem;
-  opacity: 0.9;
-}
-
-.idle-container .start-button {
-  position: absolute;
-  bottom: 40px;
-  right: 40px;
-  z-index: 60;
-  color: var(--accent-color);
-  border: 1px solid var(--accent-color);
-  padding: 12px 24px;
-  font-size: 1.2rem;
-  font-family: inherit;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
-}
-
-.idle-container .start-button:hover {
-  background: var(--accent-color);
-  color: var(--bg-dark);
-}
-
-@keyframes scrollDiagonal {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(calc(-50% - (var(--overlap) / 2)));
-  }
-}
+@import "../styles/constants.css";
