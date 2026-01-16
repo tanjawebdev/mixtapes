@@ -2,6 +2,19 @@ import type { Student } from '../types';
 import { studentsData } from '../data/students';
 
 /**
+ * Convert major abbreviation to full name
+ */
+export const getMajorFullName = (major: string): string => {
+    const majorMap: { [key: string]: string } = {
+        'ID': 'Interaction Design',
+        'MD': 'Media Design',
+        'CD': 'Communication Design',
+        'SD': 'Sound Design'
+    };
+    return majorMap[major] || major;
+};
+
+/**
  * Hook to access student data
  * 
  * This hook provides access to all student portfolio data with type safety.

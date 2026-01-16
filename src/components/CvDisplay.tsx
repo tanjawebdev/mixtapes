@@ -1,5 +1,6 @@
 import { useStore } from '../store';
-import { useStudentsData } from '../hooks/useStudentsData';
+import { useStudentsData, getMajorFullName } from '../hooks/useStudentsData';
+import { useMemo } from 'react';
 import './CvDisplay.css';
 import closeIcon from '../assets/close.svg';
 import discIcon from '../assets/cd.gif';
@@ -20,6 +21,9 @@ export function CvDisplay() {
     // Convert string studentId to number for lookup
     const studentID = currentStudentId ? parseInt(currentStudentId) : null;
     const student = studentID ? getStudentById(studentID) : null;
+
+    // Generate random background number (1-4) - stable across re-renders
+    const randomBgNumber = useMemo(() => Math.floor(Math.random() * 4) + 1, [studentID]);
 
     // No student selected yet
     if (!currentStudentId) {
@@ -56,7 +60,12 @@ export function CvDisplay() {
     // Display CV
     return (
         <div className="cv-display">
+
             <div className="cv-display-inner">
+                <div className="cv-display-bg">
+                    <img src={`major-bg/${student.major}-${randomBgNumber}.jpg`} alt="Background" />
+                </div>
+
                 <div className="cv-header">
                     <h3>Curriculum Vitae</h3>
                     <img src={closeIcon} alt="Close" />
@@ -82,7 +91,7 @@ export function CvDisplay() {
                     </div>
                     <div className="cv-title-section">
                         <div className="cv-title-header">
-                            <h5>{student.major}</h5>
+                            <h5>{getMajorFullName(student.major)}</h5>
                             <img src={closeIcon} alt="Close" />
                         </div>
                         <div className="cv-title-name">
@@ -134,27 +143,41 @@ export function CvDisplay() {
                 <div className="cv-bottom-section">
                     {/* Experience Section */}
                     {student.experiences && student.experiences.length > 0 && (
-                        <section className="cv-experiences">
-                            <div className="cv-header-experiences">
-                                <h5>Experience</h5>
-                                <img src={closeIcon} alt="Close" />
-                            </div>
-                            <div className="experiences-content">
-                                {student.experiences.map((experience, index) => (
-                                    <div key={index} className="experience-item">
-                                        <div className="experience-year-wrapper">
-                                            <div className="experience-year">
-                                                <span> {experience.years}</span>
+                        <>
+                            <section className="cv-experiences">
+                                <div className="cv-header-experiences">
+                                    <h5>Experience</h5>
+                                    <img src={closeIcon} alt="Close" />
+                                </div>
+                                <div className="experiences-content">
+                                    {student.experiences.map((experience, index) => (
+                                        <div key={index} className="experience-item">
+                                            <div className="experience-year-wrapper">
+                                                <div className="experience-year">
+                                                    <span> {experience.years}</span>
+                                                </div>
                                             </div>
+                                            <div className="experience-company-wrapper">
+                                                <div className="experience-company">{experience.company}</div>
+                                            </div>
+                                            <div className="experience-position">{experience.position}</div>
                                         </div>
-                                        <div className="experience-company-wrapper">
-                                            <div className="experience-company">{experience.company}</div>
-                                        </div>
-                                        <div className="experience-position">{experience.position}</div>
+                                    ))}
+                                </div>
+                            </section>
+
+                            <div className="cv-qr-section">
+                                <div className="cv-qr-header">
+                                    <h5>Link up</h5>
+                                    <img src={closeIcon} alt="Close" />
+                                </div>
+                                <div className="cv-qr-content">
+                                    <div className="qr-code-wrapper">
+                                        <img src={`students/${studentID}/qr.png`} alt="qr" />
                                     </div>
-                                ))}
+                                </div>
                             </div>
-                        </section>
+                        </>
                     )}
                 </div>
             </div>

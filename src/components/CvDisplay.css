@@ -6,10 +6,25 @@
     color: white;
 }
 
+.cv-display-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.cv-display-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .cv-display-inner {
     border: 2px solid var(--color-primary-dark);
     background: var(--color-primary-light);
     height: 100%;
+    position: relative;
 }
 
 .cv-header {
@@ -21,6 +36,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    z-index: 2;
+    position: relative;
 }
 
 .cv-portfolio-link {
@@ -43,13 +60,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    z-index: 3;
+    position: relative;
 }
 
 .cv-cover-section {
     position: absolute;
     width: 290px;
     height: 230px;
-    top: 140px;
+    top: 40px;
     left: 340px;
 }
 
@@ -85,7 +104,7 @@
 
 .cv-star-element {
     position: absolute;
-    top: 230px;
+    top: 120px;
     right: 30px;
     width: 221px;
     height: 221px;
@@ -99,8 +118,8 @@
 
 .cv-major-element {
     position: absolute;
-    top: 630px;
-    left: 10px;
+    top: 550px;
+    left: -20px;
     width: 221px;
     height: 221px;
 }
@@ -189,6 +208,8 @@
     align-items: center;
     color: var(--color-primary-dark);
     margin-top: 72px;
+    z-index: 2;
+    position: relative;
 }
 
 .cv-about {
@@ -229,8 +250,8 @@
 
 .cv-star-element-2 {
     position: absolute;
-    top: 1192px;
-    left: 438px;
+    top: 300px;
+    left: 410px;
     width: 221px;
     height: 221px;
 }
@@ -314,6 +335,11 @@
     background-color: var(--color-primary-light);
 }
 
+.cv-bottom-section {
+    z-index: 1;
+    position: relative;
+}
+
 .experiences-list {
     list-style: none;
     padding: 0;
@@ -355,9 +381,16 @@
     font-size: 24px;
 }
 
+.experience-company {
+    max-width: 180px;
+    line-height: 1.2em;
+}
+
 .experience-position {
     font-family: 'ABC Pelikan', sans-serif;
     font-size: 24px;
+    max-width: 240px;
+    line-height: 1.2em;
 }
 
 .experience-year {
@@ -372,6 +405,56 @@
 .experience-year span {
     border: 1px solid var(--color-primary);
     padding: 5px;
+}
+
+.cv-qr-section {
+    position: absolute;
+    right: 0;
+    bottom: -30px;
+    width: 310px;
+    height: 350px;
+    margin-right: 24px;
+    background-color: var(--color-primary-light);
+    box-shadow: var(--color-primary-dark) 2px 2px 0px;
+    display: flex;
+    flex-direction: column;
+    color: var(--color-primary-dark);
+}
+
+.cv-qr-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    border: 2px solid var(--color-primary-lighter);
+    box-shadow: var(--color-primary-dark) 0px 2px 0px;
+    background-color: var(--color-primary-light);
+}
+
+.cv-qr-content {
+    height: 290px;
+    padding: 12px 16px;
+    margin-top: 2px;
+    background-color: var(--color-primary-lighter);
+    border-left: 2px solid var(--color-primary);
+    border-right: 2px solid var(--color-primary);
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.qr-code-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 28px 44px;
+    border: 2px solid var(--color-primary-light);
+}
+
+.cv-qr-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 /* Loading/Waiting/Error states */
