@@ -13,11 +13,8 @@
     gap: 2rem;
     overflow-x: auto;
     overflow-y: hidden;
-<<<<<<< Updated upstream
     /* scroll-behavior: smooth; */
     /* Removed for instant OSC control */
-=======
->>>>>>> Stashed changes
 }
 
 /* Custom scrollbar styling */

@@ -117,11 +117,7 @@ export function ContentDisplay({
     if (galleryRef.current) {
       // Map scrollPosition (0-127 or your OSC range) to scroll pixel value
       // Adjust multiplier/mapping based on your needs
-<<<<<<< Updated upstream
       const scrollLeft = scrollPosition; // Example: multiply by 10 for pixel position
-=======
-      const scrollLeft = scrollPosition; // *200 // Example: multiply by 10 for pixel position
->>>>>>> Stashed changes
       galleryRef.current.scrollLeft = scrollLeft;
     }
   }, [scrollPosition]);
@@ -165,7 +161,6 @@ export function ContentDisplay({
   }
 
   return (
-<<<<<<< Updated upstream
     <>
       <div className="project-left-icon project-icon">
         <img src={leftIcon} alt="Left" />
@@ -199,33 +194,6 @@ export function ContentDisplay({
       </div>
       <div className="project-right-icon project-icon">
         <img src={rightIcon} alt="Right" />
-=======
-    <div className="project-content">
-      <div className="project-gallery" ref={galleryRef}>
-        {mediaFiles.map((media, index) => (
-          <div key={index} className="gallery-item">
-            {media.type === "image" ? (
-              <img
-                src={media.path}
-                alt={`${project.title} - ${media.filename}`}
-                className="gallery-image"
-                loading="lazy"
-              />
-            ) : (
-              <video
-                src={media.path}
-                controls
-                autoPlay
-                loop
-                muted
-                className="gallery-video"
-              >
-                Your browser does not support video playback.
-              </video>
-            )}
-          </div>
-        ))}
->>>>>>> Stashed changes
       </div>
     </>
   );
