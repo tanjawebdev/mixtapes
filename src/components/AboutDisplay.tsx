@@ -9,19 +9,20 @@ import textEditorIcon from '../assets/text-editor.png';
 
 /**
  * About Display Component
- * 
+ *
  * Displays current project description on the right screen
  * Shows: project title, year, type, client, description, collaborators
  */
 export function AboutDisplay() {
-    const currentStudentId = useStore((state) => state.currentStudentId);
-    const currentProject = useStore((state) => state.currentProject);
+  const currentStudentId = useStore((state) => state.currentStudentId);
+  const currentProject = useStore((state) => state.currentProject);
 
-    const { getStudentById, loading: studentsLoading } = useStudentsData();
+  const { getStudentById, loading: studentsLoading } = useStudentsData();
 
-    const studentID = currentStudentId ? parseInt(currentStudentId) : null;
-    const student = studentID ? getStudentById(studentID) : null;
-    const project = student && currentProject ? student.projects[currentProject - 1] : null;
+  const studentID = currentStudentId ? parseInt(currentStudentId) : null;
+  const student = studentID ? getStudentById(studentID) : null;
+  const project =
+    student && currentProject ? student.projects[currentProject - 1] : null;
 
     // Get consistent background number for this student (1-4)
     const randomBgNumber = studentID ? getStudentBackgroundNumber(studentID) : 1;
@@ -35,28 +36,18 @@ export function AboutDisplay() {
                     <p>Waiting for OSC trigger...</p>
                 </div>
             </div>
-        );
-    }
+          </div>
 
-    // Loading state
-    if (studentsLoading) {
-        return (
-            <div className="about-loading">
-                <div className="loading-spinner"></div>
-                <p>Loading project data...</p>
+          <div className="window-content-mask">
+            <div className="window-bg-img-wrapper">
+              <img src={idleBg} className="idle-bg-img" />
             </div>
-        );
-    }
 
-    // Student or project not found
-    if (!student || !project) {
-        return (
-            <div className="about-error">
-                <h2>Project Not Found</h2>
-                <p>Could not find project {currentProject} for student {currentStudentId}</p>
+            <div className="stars-abt-2-wrapper">
+              <img src={stars} className="stars-2" />
             </div>
-        );
-    }
+          </div>
+        </div>
 
     // Split project type into individual types
     const projectTypes = project.type.split(' ');
@@ -67,6 +58,10 @@ export function AboutDisplay() {
             <div className="about-display-bg">
                 <img src={`major-bg/${student.major}-${randomBgNumber}.jpg`} alt="Background" />
             </div>
+            <div className="cross-image-wrapper">
+              <img src={cross} alt="Cross Icon" className="cross-icon" />
+            </div>
+          </div>
 
             <div className="about-display-inner">
                 {/* Main Project Description Container */}
@@ -141,5 +136,26 @@ export function AboutDisplay() {
                 </div>
             </div>
         </div>
-    );
+      </div>
+
+      {project.about && (
+        <section className="about-description">
+          <p>{project.about}</p>
+        </section>
+      )}
+
+      {project.collaborators && (
+        <section className="about-collaborators">
+          <h3>Collaborators</h3>
+          <p>{project.collaborators}</p>
+        </section>
+      )}
+
+      <footer className="about-footer">
+        <p className="student-credit">
+          by {student.surname} {student.name}
+        </p>
+      </footer>
+    </div>
+  );
 }

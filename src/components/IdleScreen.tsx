@@ -1,9 +1,10 @@
 import React, { useMemo, useState, useEffect } from "react";
 import "./IdleScreen.css";
-import cross from "../../public/Icons/Closing-Icon.png";
 import disk from "../../public/Icons/disk.png";
+import cross from "../assets/Closing-Icon.png";
+import idleBg from "../assets/idle-bg.jpg";
+import stars from "../../public/Icons/chrome-star.png";
 import "../styles/typography.css";
-
 interface IdleScreenProps {
   isConnected: boolean;
 }
@@ -60,34 +61,52 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({ isConnected }) => {
   return (
     <div className="idle-container">
       <div className="idle-wrapper">
-        <div className="top-bar">
-          <p>Portfolio Machine</p>
+        <div className="idle-top-bar">
+          <div className="idle-headline">
+            <p>Portfolio Machine</p>
+          </div>
+
           <div className="cross-image-wrapper">
             <img src={cross} alt="Cross Icon" className="cross-icon" />
           </div>
         </div>
 
-        {/* <div className="marquee-wrapper">
-          <div className="marquee-track">
-            {displayImages.map((coverImg, index) => (
-              <div key={index} className="image-block">
-                <img src={coverImg} alt="Portfolio Cover" />
-              </div>
-            ))}
-          </div>
-        </div> */}
+        <div className="idle-window">
+          <div className="idle-window-bg">
+            <img src={idleBg} className="idle-bg-img" />
 
-        <div className="insert-disk-container">
-          <div className="disk-img-container">
+            <div className="idle-marquee-wrapper">
+              <div className="idle-marquee-track">
+                {displayImages.map((coverImg, index) => (
+                  <div key={index} className="idle-image-block">
+                    <img src={coverImg} alt="Portfolio Cover" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="idle-stars-1-wrapper">
+            <img src={stars} className="idle-stars-1" />
+          </div>
+          <div className="idle-stars-2-wrapper">
+            <img src={stars} className="idle-stars-2" />
+          </div>
+        </div>
+
+        <div className="idle-disk-container">
+          <div className="idle-disk-img-container">
             <img
               src={disk}
               alt="Disk Icon"
-              className="disk-icon"
+              className="idle-disk-icon"
               style={{ opacity: isConnected ? 1 : 0.5 }}
             />
           </div>
-          <div className="inner-container">
-            <p>{isConnected ? "Insert Disk" : "Connecting..."}</p>
+          <div className="idle-disk-text-container">
+            <div className="idle-disk-text-wrapper">
+              <p>{isConnected ? "Insert Disk" : "Connecting..."}</p>
+            </div>
           </div>
         </div>
       </div>
