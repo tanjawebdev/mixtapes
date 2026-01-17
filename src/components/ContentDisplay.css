@@ -1,36 +1,19 @@
 .project-content {
-    width: 100%;
-    max-width: 1400px;
+    width: 3128px;
+    height: 1900px;
     margin: 0 auto;
-    padding: 2rem;
-}
-
-.project-header {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-.project-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 0.5rem;
-}
-
-.project-meta {
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.6);
+    padding: 40px;
+    border: 1px solid #fff;
 }
 
 .project-gallery {
     display: flex;
     flex-wrap: nowrap;
-    height: 70vh;
+    height: 100%;
     gap: 2rem;
     overflow-x: auto;
     overflow-y: hidden;
     scroll-behavior: smooth;
-    padding: 1rem 0;
 }
 
 /* Custom scrollbar styling */
@@ -48,10 +31,6 @@
     border-radius: 4px;
 }
 
-.project-gallery::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.5);
-}
-
 .gallery-item {
     position: relative;
     flex-shrink: 0;
@@ -63,10 +42,6 @@
     transition: transform 0.2s ease;
 }
 
-.gallery-item:hover {
-    transform: scale(1.02);
-}
-
 .gallery-image,
 .gallery-video {
     height: 100%;
@@ -74,26 +49,6 @@
     max-width: none;
     object-fit: contain;
     display: block;
-}
-
-.project-footer {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
-}
-
-.project-about {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.8);
-    margin-bottom: 1rem;
-}
-
-.project-collaborators {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.5);
-    font-style: italic;
 }
 
 .project-loading,
@@ -119,12 +74,6 @@
     color: rgba(255, 255, 255, 0.6);
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
-}
-
-.project-empty__hint {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.4);
-    font-family: monospace;
 }
 
 @keyframes spin {

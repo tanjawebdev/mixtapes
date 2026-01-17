@@ -40,6 +40,7 @@ export interface AppState {
     currentProject: number | null; // Project number 1-5
     error: string | null;
     wsConnected: boolean;
+    scrollPosition: number; // Gallery scroll position controlled by OSC
 }
 
 // Content type detection

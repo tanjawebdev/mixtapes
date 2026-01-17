@@ -1,5 +1,7 @@
+import { useEffect, useRef } from "react";
 import { useStudentMedia } from "../hooks/useStudentMedia";
 import { useStudentsData } from "../hooks/useStudentsData";
+import { useStore } from "../store";
 import "./ContentDisplay.css";
 
 interface ContentDisplayProps {
@@ -27,6 +29,20 @@ export function ContentDisplay({
 
   // Auto-discover media files from folder
   const { all: mediaFiles } = useStudentMedia(studentID, projectNumber);
+
+  // Get scroll position from store and create ref for gallery
+  const scrollPosition = useStore((state) => state.scrollPosition);
+  const galleryRef = useRef<HTMLDivElement>(null);
+
+  // Update gallery scroll position when scrollPosition changes in store
+  useEffect(() => {
+    if (galleryRef.current) {
+      // Map scrollPosition (0-127 or your OSC range) to scroll pixel value
+      // Adjust multiplier/mapping based on your needs
+      const scrollLeft = scrollPosition * 10; // Example: multiply by 10 for pixel position
+      galleryRef.current.scrollLeft = scrollLeft;
+    }
+  }, [scrollPosition]);
 
   // Loading state
   if (studentsLoading) {
@@ -68,16 +84,33 @@ export function ContentDisplay({
 
   return (
     <div className="project-content">
-      {/* Optional: Display project metadata */}
-      <div className="project-header">
-        <h2 className="project-title">{project.title}</h2> test
-        <p className="project-meta">
-          {project.year} · {project.type}
-        </p>
+      {/* TEMPORARY: Dev test buttons - remove when OSC is working */}
+      <div style={{ position: 'absolute', top: 10, left: '40%', zIndex: 1000, display: 'flex', gap: '8px' }}>
+        <button onClick={() => useStore.getState().setScrollPosition(0)} style={{ padding: '8px 12px', background: '#333', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          Start (0)
+        </button>
+        <button onClick={() => useStore.getState().setScrollPosition(100)} style={{ padding: '8px 12px', background: '#333', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          Mid (100)
+        </button>
+        <button onClick={() => useStore.getState().setScrollPosition(500)} style={{ padding: '8px 12px', background: '#333', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          Far (500)
+        </button>
+        <button onClick={() => useStore.getState().setScrollPosition(1000)} style={{ padding: '8px 12px', background: '#333', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          Further (1000)
+        </button>
       </div>
 
-      {/* Media Gallery */}
-      <div className="project-gallery">
+      {/* TEMPORARY: Dev test buttons - prev next test of projects */}
+      <div style={{ position: 'absolute', top: 10, left: '60%', zIndex: 1000, display: 'flex', gap: '8px' }}>
+        <button onClick={() => useStore.getState().navigateProject('prev')} style={{ padding: '8px 12px', background: '#333', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          Prev
+        </button>
+        <button onClick={() => useStore.getState().navigateProject('next')} style={{ padding: '8px 12px', background: '#333', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+          Next
+        </button>
+      </div>
+
+      <div className="project-gallery" ref={galleryRef}>
         {mediaFiles.map((media, index) => (
           <div key={index} className="gallery-item">
             {media.type === "image" ? (
@@ -102,18 +135,6 @@ export function ContentDisplay({
           </div>
         ))}
       </div>
-
-      {/* Optional: Display project description at bottom */}
-      {project.about && (
-        <div className="project-footer">
-          <p className="project-about">{project.about}</p>
-          {project.collaborators && (
-            <p className="project-collaborators">
-              Collaborators: {project.collaborators}
-            </p>
-          )}
-        </div>
-      )}
     </div>
   );
 }

@@ -8,6 +8,7 @@ interface StoreActions {
     resetToInitial: () => void;
     setError: (error: string | null) => void;
     setWsConnected: (connected: boolean) => void;
+    setScrollPosition: (position: number) => void;
     reset: () => void;
 }
 
@@ -18,6 +19,7 @@ const initialState: AppState = {
     currentProject: 1, // Set to null to trigger loading
     error: null,
     wsConnected: false,
+    scrollPosition: 0,
 };
 
 /**
@@ -62,6 +64,7 @@ export const useStore = create<Store>((set) => ({
             return {
                 currentProject: newProject,
                 error: null,
+                scrollPosition: 0,
             };
         }),
 
@@ -79,6 +82,9 @@ export const useStore = create<Store>((set) => ({
 
     // Set WebSocket connection status
     setWsConnected: (connected) => set({ wsConnected: connected }),
+
+    // Set scroll position for gallery (controlled by OSC)
+    setScrollPosition: (position) => set({ scrollPosition: position }),
 
     // Reset to initial state
     reset: () => set(initialState),

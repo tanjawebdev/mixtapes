@@ -21,6 +21,7 @@ export const useOscData = () => {
     const navigateProject = useStore((state) => state.navigateProject);
     const resetToInitial = useStore((state) => state.resetToInitial);
     const setOscConnected = useStore((state) => state.setWsConnected);
+    const setScrollPosition = useStore((state) => state.setScrollPosition);
 
     const connect = useCallback(() => {
         try {
@@ -63,7 +64,7 @@ export const useOscData = () => {
 
                             // When CD is removed (0), reset to project 1
                             if (!isPresent) {
-                            
+
                                 console.log('🔄 CD removed - resetting to project 1');
                                 resetToInitial();
                             }
@@ -93,8 +94,10 @@ export const useOscData = () => {
                         case '/scrollpos': {
                             // Scroll position: "/scrollpos 5"
                             const scrollPos = args[0]?.value;
-                            console.log(`📜 Scroll position: ${scrollPos}`);
-                            // TODO: You can add scroll handling here if needed
+                            if (scrollPos !== undefined) {
+                                console.log(`📜 Scroll position: ${scrollPos}`);
+                                setScrollPosition(scrollPos);
+                            }
                             break;
                         }
 
@@ -123,7 +126,7 @@ export const useOscData = () => {
         } catch (error) {
             console.error('❌ Error connecting to OSC bridge:', error);
         }
-    }, [setCurrentStudent, navigateProject, resetToInitial, setOscConnected]);
+    }, [setCurrentStudent, navigateProject, resetToInitial, setOscConnected, setScrollPosition]);
 
     useEffect(() => {
         connect();
