@@ -94,7 +94,7 @@ export function CvDisplay() {
                     </div>
                     <div className="cv-title-section">
                         <div className="cv-title-header">
-                            <div className="cv-header-left">
+                            <div className="header-left">
                                 <img className="portfolio-icon" src={`majors/${student.major}_icon.png`} />
                                 <h5>{getMajorFullName(student.major)}</h5>
                             </div>
@@ -111,7 +111,7 @@ export function CvDisplay() {
                     {student.aboutMe && (
                         <section className="cv-about">
                             <div className="cv-header-about">
-                                <div className="cv-header-left">
+                                <div className="header-left">
                                     <img className="portfolio-icon" src={textfileIcon} alt="Student" />
                                     <h5>About Me</h5>
                                 </div>
@@ -129,7 +129,7 @@ export function CvDisplay() {
                     {student.skills && student.skills.length > 0 && (
                         <section className="cv-skills">
                             <div className="cv-header-skills">
-                                <div className="cv-header-left">
+                                <div className="header-left">
                                     <img className="portfolio-icon" src={paintIcon} alt="Student" />
                                     <h5>Skills</h5>
                                 </div>
@@ -158,7 +158,7 @@ export function CvDisplay() {
                         <>
                             <section className="cv-experiences">
                                 <div className="cv-header-experiences">
-                                    <div className="cv-header-left">
+                                    <div className="header-left">
                                         <img className="portfolio-icon" src={contactBookIcon} alt="Student" />
                                         <h5>Experience</h5>
                                     </div>
@@ -183,7 +183,7 @@ export function CvDisplay() {
 
                             <div className="cv-qr-section">
                                 <div className="cv-qr-header">
-                                    <div className="cv-header-left">
+                                    <div className="header-left">
                                         <img className="portfolio-icon" src={paperplaneIcon} alt="Student" />
                                         <h5>Link up</h5>
                                     </div>

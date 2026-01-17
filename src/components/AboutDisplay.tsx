@@ -2,7 +2,10 @@ import { useStore } from '../store';
 import { useStudentsData, getStudentBackgroundNumber } from '../hooks/useStudentsData';
 import './AboutDisplay.css';
 import closeIcon from '../assets/close.svg';
-import starIcon from '../assets/chrome-star.png';
+import starIcon from '../assets/stars.png';
+import textFileIcon from '../assets/text-file.png';
+import categoriesIcon from '../assets/categories.png';
+import textEditorIcon from '../assets/text-editor.png';
 
 /**
  * About Display Component
@@ -76,8 +79,12 @@ export function AboutDisplay() {
                     <div className="about-content-wrapper">
                         {/* Project Title Section */}
                         <div className="about-title-section">
+
                             <div className="about-title-header">
-                                <h5>PROJECT TITLE</h5>
+                                <div className="header-left">
+                                    <img src={textFileIcon} alt="Text File" />
+                                    <h5>PROJECT TITLE</h5>
+                                </div>
                                 <img src={closeIcon} alt="Close" />
                             </div>
                             <div className="about-title-content">
@@ -91,7 +98,10 @@ export function AboutDisplay() {
                         {/* Type of Project Section */}
                         <div className="about-type-section">
                             <div className="about-type-header">
-                                <h5>TYPE OF PROJECT</h5>
+                                <div className="header-left">
+                                    <img src={categoriesIcon} alt="Categories" />
+                                    <h5>TYPE OF PROJECT</h5>
+                                </div>
                                 <img src={closeIcon} alt="Close" />
                             </div>
                             <div className="about-type-content">
@@ -105,7 +115,10 @@ export function AboutDisplay() {
                     {/* About the Project Section */}
                     <div className="about-description-container">
                         <div className="about-description-header">
-                            <h5>ABOUT THE PROJECT</h5>
+                            <div className="header-left">
+                                <img src={textEditorIcon} alt="Text Editor" />
+                                <h5>ABOUT THE PROJECT</h5>
+                            </div>
                             <img src={closeIcon} alt="Close" />
                         </div>
                         <div className="about-description-content">

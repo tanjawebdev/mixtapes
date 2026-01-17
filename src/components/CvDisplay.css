@@ -163,12 +163,6 @@
     box-shadow: var(--color-primary-dark) 0px 2px 0px;
 }
 
-.cv-header-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
 .cv-title-name {
     display: flex;
     justify-content: center;
