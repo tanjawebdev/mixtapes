@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import { useStudentMedia } from "../hooks/useStudentMedia";
 import { useStudentsData } from "../hooks/useStudentsData";
 import { useStore } from "../store";
+import leftIcon from "../assets/left.png";
+import rightIcon from "../assets/right.png";
 import "./ContentDisplay.css";
 
 interface ContentDisplayProps {
@@ -32,14 +34,90 @@ export function ContentDisplay({
 
   // Get scroll position from store and create ref for gallery
   const scrollPosition = useStore((state) => state.scrollPosition);
+  const setScrollMetrics = useStore((state) => state.setScrollMetrics);
   const galleryRef = useRef<HTMLDivElement>(null);
+
+  // Calculate and store scroll metrics when gallery content loads
+  useEffect(() => {
+    if (!galleryRef.current || mediaFiles.length === 0) return;
+
+    const calculateTotalWidth = () => {
+      if (!galleryRef.current) return;
+
+      const { clientWidth } = galleryRef.current;
+
+      // Manually calculate total width by summing all gallery items + gaps
+      const galleryItems = galleryRef.current.querySelectorAll('.gallery-item');
+      let totalWidth = 0;
+      const GAP = 32; // 2rem = 32px (match CSS gap: 2rem)
+
+      galleryItems.forEach((item, index) => {
+        totalWidth += (item as HTMLElement).offsetWidth;
+        if (index < galleryItems.length - 1) {
+          totalWidth += GAP; // Add gap between items
+        }
+      });
+
+      console.log('Calculated total width:', totalWidth, 'Client width:', clientWidth);
+      setScrollMetrics(totalWidth, clientWidth);
+    };
+
+    // Wait for all images and videos to load before calculating
+    const images = galleryRef.current.querySelectorAll('img');
+    const videos = galleryRef.current.querySelectorAll('video');
+    const allMedia = [...Array.from(images), ...Array.from(videos)];
+
+    let loadedCount = 0;
+    const totalMedia = allMedia.length;
+
+    const handleMediaLoad = () => {
+      loadedCount++;
+      if (loadedCount === totalMedia) {
+        // All media loaded, now calculate
+        calculateTotalWidth();
+      }
+    };
+
+    // Add load listeners to all media
+    allMedia.forEach((media) => {
+      if (
+        (media instanceof HTMLImageElement && media.complete) ||
+        (media instanceof HTMLVideoElement && media.readyState >= 2)
+      ) {
+        // Already loaded
+        loadedCount++;
+      } else {
+        media.addEventListener('load', handleMediaLoad);
+        media.addEventListener('loadedmetadata', handleMediaLoad); // For videos
+      }
+    });
+
+    // If all media already loaded, calculate immediately
+    if (loadedCount === totalMedia) {
+      calculateTotalWidth();
+    }
+
+    // Also use ResizeObserver as fallback to detect size changes
+    const resizeObserver = new ResizeObserver(() => {
+      calculateTotalWidth();
+    });
+    resizeObserver.observe(galleryRef.current);
+
+    return () => {
+      allMedia.forEach((media) => {
+        media.removeEventListener('load', handleMediaLoad);
+        media.removeEventListener('loadedmetadata', handleMediaLoad);
+      });
+      resizeObserver.disconnect();
+    };
+  }, [mediaFiles, setScrollMetrics]);
 
   // Update gallery scroll position when scrollPosition changes in store
   useEffect(() => {
     if (galleryRef.current) {
       // Map scrollPosition (0-127 or your OSC range) to scroll pixel value
       // Adjust multiplier/mapping based on your needs
-      const scrollLeft = scrollPosition * 10; // Example: multiply by 10 for pixel position
+      const scrollLeft = scrollPosition; // Example: multiply by 10 for pixel position
       galleryRef.current.scrollLeft = scrollLeft;
     }
   }, [scrollPosition]);
@@ -83,58 +161,40 @@ export function ContentDisplay({
   }
 
   return (
-    <div className="project-content">
-      {/* TEMPORARY: Dev test buttons - remove when OSC is working */}
-      <div style={{ position: 'absolute', top: 10, left: '40%', zIndex: 1000, display: 'flex', gap: '8px' }}>
-        <button onClick={() => useStore.getState().setScrollPosition(0)} style={{ padding: '8px 12px', background: '#333', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-          Start (0)
-        </button>
-        <button onClick={() => useStore.getState().setScrollPosition(100)} style={{ padding: '8px 12px', background: '#333', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-          Mid (100)
-        </button>
-        <button onClick={() => useStore.getState().setScrollPosition(500)} style={{ padding: '8px 12px', background: '#333', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-          Far (500)
-        </button>
-        <button onClick={() => useStore.getState().setScrollPosition(1000)} style={{ padding: '8px 12px', background: '#333', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-          Further (1000)
-        </button>
+    <>
+      <div className="project-left-icon project-icon">
+        <img src={leftIcon} alt="Left" />
       </div>
-
-      {/* TEMPORARY: Dev test buttons - prev next test of projects */}
-      <div style={{ position: 'absolute', top: 10, left: '60%', zIndex: 1000, display: 'flex', gap: '8px' }}>
-        <button onClick={() => useStore.getState().navigateProject('prev')} style={{ padding: '8px 12px', background: '#333', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-          Prev
-        </button>
-        <button onClick={() => useStore.getState().navigateProject('next')} style={{ padding: '8px 12px', background: '#333', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-          Next
-        </button>
+      <div className="project-content">
+        <div className="project-gallery" ref={galleryRef}>
+          {mediaFiles.map((media, index) => (
+            <div key={index} className="gallery-item">
+              {media.type === "image" ? (
+                <img
+                  src={media.path}
+                  alt={`${project.title} - ${media.filename}`}
+                  className="gallery-image"
+                  loading="lazy"
+                />
+              ) : (
+                <video
+                  src={media.path}
+                  controls
+                  autoPlay
+                  loop
+                  muted
+                  className="gallery-video"
+                >
+                  Your browser does not support video playback.
+                </video>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-
-      <div className="project-gallery" ref={galleryRef}>
-        {mediaFiles.map((media, index) => (
-          <div key={index} className="gallery-item">
-            {media.type === "image" ? (
-              <img
-                src={media.path}
-                alt={`${project.title} - ${media.filename}`}
-                className="gallery-image"
-                loading="lazy"
-              />
-            ) : (
-              <video
-                src={media.path}
-                controls
-                autoPlay
-                loop
-                muted
-                className="gallery-video"
-              >
-                Your browser does not support video playback.
-              </video>
-            )}
-          </div>
-        ))}
+      <div className="project-right-icon project-icon">
+        <img src={rightIcon} alt="Right" />
       </div>
-    </div>
+    </>
   );
 }

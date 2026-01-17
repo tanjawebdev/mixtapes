@@ -41,6 +41,8 @@ export interface AppState {
     error: string | null;
     wsConnected: boolean;
     scrollPosition: number; // Gallery scroll position controlled by OSC
+    scrollWidth: number; // Total scrollable width of gallery
+    clientWidth: number; // Visible width of gallery
 }
 
 // Content type detection

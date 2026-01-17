@@ -1,6 +1,6 @@
 .project-content {
     width: 3128px;
-    height: 1900px;
+    height: 1760px;
     margin: 0 auto;
     padding: 40px;
     border: 1px solid #fff;
@@ -13,7 +13,8 @@
     gap: 2rem;
     overflow-x: auto;
     overflow-y: hidden;
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth; */
+    /* Removed for instant OSC control */
 }
 
 /* Custom scrollbar styling */
