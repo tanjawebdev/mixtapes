@@ -17,9 +17,10 @@
     /* Removed for instant OSC control */
 }
 
+
 /* Custom scrollbar styling */
 .project-gallery::-webkit-scrollbar {
-    height: 8px;
+    display: none;
 }
 
 .project-gallery::-webkit-scrollbar-track {

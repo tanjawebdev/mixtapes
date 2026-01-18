@@ -162,9 +162,18 @@ export function ContentDisplay({
 
   return (
     <>
-      <div className="project-left-icon project-icon">
-        <img src={leftIcon} alt="Left" />
-      </div>
+      {/* Test scrollposotion: set scrollposition to 100, 500, 1000 
+      <button onClick={() => useStore.setState({ scrollPosition: 100 })}>Set scrollPosition to 100</button>
+      <button onClick={() => useStore.setState({ scrollPosition: 5000 })}>Set scrollPosition to 500</button>
+      <button onClick={() => useStore.setState({ scrollPosition: 1000 })}>Set scrollPosition to 1000</button>
+      */}
+
+      {/* Content */}
+      {projectNumber > 1 && (
+        <div className="project-left-icon project-icon">
+          <img src={leftIcon} alt="Left" />
+        </div>
+      )}
       <div className="project-content">
         <div className="project-gallery" ref={galleryRef}>
           {mediaFiles.map((media, index) => (
@@ -192,9 +201,11 @@ export function ContentDisplay({
           ))}
         </div>
       </div>
-      <div className="project-right-icon project-icon">
-        <img src={rightIcon} alt="Right" />
-      </div>
+      {projectNumber < student.projects.length && (
+        <div className="project-right-icon project-icon">
+          <img src={rightIcon} alt="Right" />
+        </div>
+      )}
     </>
   );
 }

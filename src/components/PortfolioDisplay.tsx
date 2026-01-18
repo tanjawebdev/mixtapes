@@ -7,6 +7,9 @@ import bgImage from "../assets/idle-bg.png";
 import leftIcon from "../assets/mini-left.png";
 import rightIcon from "../assets/mini-right.png";
 import "./PortfolioDisplay.css";
+import folderClosedIcon from "../assets/folder-close.png";
+import folderOpenIcon from "../assets/folder-open.png";
+
 
 /**
  * Main portfolio display component
@@ -22,24 +25,29 @@ export function PortfolioDisplay() {
   const { getStudentById, loading: studentsLoading } = useStudentsData();
 
   // Calculate custom scrollbar position and width
+  // The .portfolio-scroll-middle container is 3578px wide (fixed)
+  const SCROLLBAR_CONTAINER_WIDTH = 3578;
+
   // Make scroller width proportional to visible content (like native scrollbars)
-  const scrollerContainerWidth = clientWidth || 3128; // Fallback to content width
   const scrollerWidth = scrollWidth > 0
-    ? Math.max(100, (clientWidth / scrollWidth) * scrollerContainerWidth) // Min 100px
-    : scrollerContainerWidth; // If no scroll, full width
+    ? Math.max(100, (clientWidth / scrollWidth) * SCROLLBAR_CONTAINER_WIDTH)
+    : SCROLLBAR_CONTAINER_WIDTH;
 
   const maxScrollLeft = scrollWidth - clientWidth;
   const scrollPercentage = maxScrollLeft > 0 ? scrollPosition / maxScrollLeft : 0;
 
-  // Calculate available space for scroller to move
-  const maxScrollerLeft = scrollerContainerWidth - scrollerWidth;
-  const scrollerLeft = scrollPercentage * maxScrollerLeft;
+  // clamp scrollPercentage between 0 and 1
+  const clampedScrollPercentage = Math.max(0, Math.min(1, scrollPercentage));
 
-  console.log(maxScrollLeft);
-  console.log(scrollPercentage);
-  console.log(scrollerLeft);
-  console.log(scrollWidth);
-  console.log(clientWidth);
+  // Calculate available space for scroller to move within the 3578px container
+  const maxScrollerLeft = SCROLLBAR_CONTAINER_WIDTH - scrollerWidth;
+  const scrollerLeft = clampedScrollPercentage * maxScrollerLeft;
+
+  //console.log(maxScrollLeft);
+  //console.log(scrollPercentage);
+  //console.log(scrollerLeft);
+  //console.log(scrollWidth);
+  //console.log(clientWidth);
 
   // --- 1. IDLE STATE CHECK ---
   if (!currentStudentId || currentStudentId === "") {
@@ -81,7 +89,15 @@ export function PortfolioDisplay() {
         <div className="portfolio-header">
           <div className="portfolio-header-inner">
             <h4 className="portfolio-title">Portfolio</h4>
-            <div className="project-icons-pagination">folder icons</div>
+            <div className="project-icons-pagination">
+              {student.projects.map((_, index) => (
+                <img
+                  key={index}
+                  src={index + 1 === activeProjectNumber ? folderOpenIcon : folderClosedIcon}
+                  alt={`Project ${index + 1}`}
+                />
+              ))}
+            </div>
             <div className="portfolio-right">
               <h4 className="portfolio-pagination-text">
                 0{activeProjectNumber} I 0{student.projects.length}

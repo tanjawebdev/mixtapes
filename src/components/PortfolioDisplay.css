@@ -160,6 +160,12 @@
   border-right: 4px solid var(--color-primary-dark);
 }
 
+.project-icons-pagination {
+  display: flex;
+  align-items: center;
+  gap: 70px;
+}
+
 /* Content display styles */
 .content-text,
 .content-image,
