@@ -12,18 +12,20 @@ interface StoreActions {
     setScrollPosition: (position: number) => void;
     setScrollMetrics: (scrollWidth: number, clientWidth: number) => void;
     reset: () => void;
+    setStudentActive: (active: boolean) => void;
 }
 
 type Store = AppState & StoreActions;
 
 const initialState: AppState = {
-    currentStudentId: "1", // Set to empty string to trigger loading
-    currentProject: 1, // Set to null to trigger loading
+    currentStudentId: "", // Set to empty string to trigger loading
+    currentProject: null, // Set to null to trigger loading
     error: null,
     wsConnected: false,
     scrollPosition: 0,
     scrollWidth: 0,
     clientWidth: 0,
+    studentActive: false,
 };
 
 /**
@@ -85,8 +87,9 @@ export const useStore = create<Store>((set) => ({
 
     // Reset to project 1 (called when CD removed)
     resetToInitial: () =>
-        set((state) => ({
-            currentProject: state.currentStudentId ? 1 : null,
+        set(() => ({
+            currentStudentId: "",
+            currentProject: null,
             error: null,
         })),
 
@@ -104,6 +107,9 @@ export const useStore = create<Store>((set) => ({
     // Set scroll metrics for gallery (width calculations)
     setScrollMetrics: (scrollWidth, clientWidth) =>
         set({ scrollWidth, clientWidth }),
+
+    // Set student active status (lid sensor)
+    setStudentActive: (active) => set({ studentActive: active }),
 
     // Reset to initial state
     reset: () => set(initialState),

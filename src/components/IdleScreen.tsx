@@ -8,6 +8,7 @@ import "../styles/typography.css";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { studentsData } from "../data/students";
+import { useStore } from "../store";
 
 interface IdleScreenProps {
   isConnected: boolean;
@@ -25,6 +26,7 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({
   const [foundImages, setFoundImages] = useState<string[]>([]);
   const marqueeTrackRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const studentActive = useStore((state) => state.studentActive);
 
   // --- Bilder laden ---
   useEffect(() => {
@@ -90,7 +92,7 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({
       if (foundImages.length === 0) return;
 
       // Wenn wir gar kein Ziel haben (normaler Idle Mode), machen wir nichts
-      if (!targetStudentId) return;
+      if (!targetStudentId || !studentActive) return;
 
       const track = marqueeTrackRef.current;
 

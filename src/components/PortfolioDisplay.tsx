@@ -17,6 +17,7 @@ export function PortfolioDisplay() {
   const setCurrentStudent = useStore((state) => state.setCurrentStudent);
   const currentProject = useStore((state) => state.currentProject);
   const wsConnected = useStore((state) => state.wsConnected);
+  const studentActive = useStore((state) => state.studentActive);
 
   // UI Store Hooks
   const scrollPosition = useStore((state) => state.scrollPosition);
@@ -74,7 +75,7 @@ export function PortfolioDisplay() {
 
   // --- VIEW LOGIC ---
 
-  const showIdleScreen = !currentStudentId || isIdleExiting;
+  const showIdleScreen = !currentStudentId || isIdleExiting || !studentActive;
 
   // Nimmt entweder die ID die wir gerade animieren oder die aktuelle
   const targetIdForIdle = animatingStudentId || currentStudentId;
