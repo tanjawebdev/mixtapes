@@ -36,6 +36,7 @@ export function ContentDisplay({
   const scrollPosition = useStore((state) => state.scrollPosition);
   const setScrollMetrics = useStore((state) => state.setScrollMetrics);
   const galleryRef = useRef<HTMLDivElement>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
   // Calculate and store scroll metrics when gallery content loads
   useEffect(() => {
@@ -122,6 +123,56 @@ export function ContentDisplay({
     }
   }, [scrollPosition]);
 
+  // Auto-mute/unmute videos based on which one is centered in the viewport
+  useEffect(() => {
+    const gallery = galleryRef.current;
+    if (!gallery) return;
+
+    const handleScroll = () => {
+      // Calculate the center position of the visible gallery area
+      const galleryRect = gallery.getBoundingClientRect();
+      const galleryCenterX = galleryRect.left + galleryRect.width / 2;
+
+      // Find which video is closest to the center
+      let closestVideo: HTMLVideoElement | null = null;
+      let closestDistance = Infinity;
+
+      videoRefs.current.forEach((video) => {
+        if (!video) return;
+
+        const videoRect = video.getBoundingClientRect();
+        const videoCenterX = videoRect.left + videoRect.width / 2;
+        const distance = Math.abs(videoCenterX - galleryCenterX);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestVideo = video;
+        }
+      });
+
+      // Mute all videos except the one in the center
+      videoRefs.current.forEach((video) => {
+        if (!video) return;
+
+        if (video === closestVideo) {
+          video.muted = false;
+        } else {
+          video.muted = true;
+        }
+      });
+    };
+
+    // Attach scroll listener
+    gallery.addEventListener('scroll', handleScroll);
+
+    // Run once on mount to set initial state
+    handleScroll();
+
+    return () => {
+      gallery.removeEventListener('scroll', handleScroll);
+    };
+  }, [mediaFiles]);
+
   // Loading state
   if (studentsLoading) {
     return (
@@ -187,6 +238,14 @@ export function ContentDisplay({
                 />
               ) : (
                 <video
+                  ref={(el) => {
+                    // Track video refs for audio control
+                    const videoIndex = mediaFiles
+                      .slice(0, index + 1)
+                      .filter(m => m.type === 'video')
+                      .length - 1;
+                    videoRefs.current[videoIndex] = el;
+                  }}
                   src={media.path}
                   controls
                   autoPlay
