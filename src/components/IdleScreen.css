@@ -64,7 +64,7 @@
   will-change: transform;
   /* Wir nutzen keine Animation property hier im CSS, 
      da wir sie in JS dynamisch killen, aber fürs Initiale setup ok */
-  animation: scrollDiagonal 60s linear infinite;
+  animation: scrollDiagonal 10s linear infinite;
   padding: 50px 0;
 }
 
@@ -93,12 +93,12 @@
 
 /* Der Text Style */
 .idle-student-name {
-  margin-top: 30px; /* Abstand zum Bild */
+  margin-top: 30px;
   font-family: "Space Mono", monospace;
-  font-size: 42px;
+  font-size: 48px;
   color: var(--color-primary-white);
   text-align: center;
-  background-color: var(--color-primary); /* Hintergrund für Lesbarkeit */
+  background-color: var(--color-primary);
   padding: 8px 24px;
   border: 2px solid var(--color-primary-dark);
 
