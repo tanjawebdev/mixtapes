@@ -26,6 +26,7 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({
   const marqueeTrackRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // --- Bilder laden ---
   useEffect(() => {
     const loadImages = async () => {
       const MAX_ID = 60;
@@ -77,13 +78,23 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({
     ];
   }, [foundImages]);
 
+  // --- ANIMATION ---
   useGSAP(
     () => {
-      if (!targetStudentId || !marqueeTrackRef.current) return;
+      // 1. Grund-Checks
+      if (!marqueeTrackRef.current) return;
+
+      // WICHTIG: Wenn Bilder noch laden, brechen wir hier ab,
+      // OHNE onAnimationComplete aufzurufen. Wir warten einfach.
+      // Der Hook feuert erneut, sobald foundImages gefüllt ist.
+      if (foundImages.length === 0) return;
+
+      // Wenn wir gar kein Ziel haben (normaler Idle Mode), machen wir nichts
+      if (!targetStudentId) return;
 
       const track = marqueeTrackRef.current;
 
-      // 1. Freeze
+      // 2. Freeze
       const computedStyle = window.getComputedStyle(track);
       const matrix = new DOMMatrix(computedStyle.transform);
       const currentX = matrix.m41;
@@ -91,19 +102,23 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({
       gsap.set(track, { x: currentX });
       track.style.animation = "none";
 
-      // 2. Find Target
+      // 3. Find Target
+      // Hier können wir uns jetzt sicher sein, dass Bilder im DOM sind,
+      // weil foundImages > 0 ist.
       const targetSrcFragment = `/covers/${targetStudentId}.webp`;
       const allImages = Array.from(track.querySelectorAll("img"));
       const candidates = allImages.filter((img) =>
         img.src.includes(targetSrcFragment)
       );
 
+      // Falls WIRKLICH kein Bild gefunden wurde (obwohl geladen), dann skippen.
       if (candidates.length === 0) {
+        console.warn("Target image not found in marquee:", targetStudentId);
         if (onAnimationComplete) onAnimationComplete();
         return;
       }
 
-      // 3. Middle
+      // 4. Middle
       const viewportCenter = window.innerWidth / 2;
       let bestCandidateImg = candidates[0];
       let minDistance = Infinity;
@@ -121,7 +136,7 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({
       const imageBlock = bestCandidateImg.parentElement as HTMLElement;
       const nameElement = imageBlock.querySelector(".idle-student-name");
 
-      // 4. Calc Dist
+      // 5. Calc Dist
       const rect = bestCandidateImg.getBoundingClientRect();
       const currentScreenX = rect.left + rect.width / 2;
       const screenDiff = viewportCenter - currentScreenX;
@@ -143,18 +158,11 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({
       // --- PHASE 2: PAUSE ---
       tl.to({}, { duration: 0.5 });
 
-      // --- PHASE 3: BALANCED HORIZONTAL SPLIT ---
+      // --- PHASE 3: FINAL SPLIT (X: 1700 / Y: 1500) ---
 
-      // 1. TRACK: Zieht moderat nach LINKS (-1200)
-      const trackRetreat = 1200;
+      const trackRetreat = 800;
 
-      // 2. BILD:
-      // Um GENAU waagrecht zu bleiben, müssen X und Y identisch sein.
-      // Wir gleichen die 1200 aus und addieren 600 für die Bewegung nach rechts.
-      // Summe = 1800.
-      const imageMove = 1800;
-
-      // A) TRACK
+      // A) TRACK: -800
       tl.to(track, {
         x: `-=${trackRetreat}`,
         y: -trackRetreat,
@@ -162,13 +170,12 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({
         ease: "power3.inOut",
       });
 
-      // B) BILD
-      // Identische X und Y Werte garantieren eine gerade Linie im -45° System
+      // B) BILD:
       tl.to(
         imageBlock,
         {
-          x: imageMove, // 1800
-          y: imageMove, // 1800 (Identisch zu X -> kein Drift nach oben!)
+          x: 1700,
+          y: 1500,
           scale: 1.25,
           duration: 2.2,
           ease: "power3.inOut",
@@ -194,7 +201,8 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({
       // --- PHASE 5: HOLD ---
       tl.to({}, { duration: 3 });
     },
-    { scope: containerRef, dependencies: [targetStudentId] }
+    // WICHTIG: foundImages muss hier rein, damit der Hook neu feuert, wenn der Fetch fertig ist!
+    { scope: containerRef, dependencies: [targetStudentId, foundImages] }
   );
 
   return (
@@ -235,7 +243,11 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({
 
         <div
           className="idle-disk-container"
-          onClick={() => onFakeNfc && onFakeNfc("1")}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (onFakeNfc) onFakeNfc("28");
+          }}
           style={{ cursor: "pointer" }}
         >
           <div className="idle-disk-img-container">

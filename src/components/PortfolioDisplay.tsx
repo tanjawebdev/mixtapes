@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from "react"; // useEffect entfernen wir für den Trigger
 import { useStore } from "../store";
 import { useStudentsData } from "../hooks/useStudentsData";
 import { ContentDisplay } from "./ContentDisplay";
@@ -11,13 +11,10 @@ import "./PortfolioDisplay.css";
 import folderClosedIcon from "../assets/folder-close.png";
 import folderOpenIcon from "../assets/folder-open.png";
 
-/**
- * Main portfolio display component
- */
 export function PortfolioDisplay() {
   // 1. Store Hooks
   const currentStudentId = useStore((state) => state.currentStudentId);
-  const setCurrentStudent = useStore((state) => state.setCurrentStudent); // Funktion zum Setzen der ID
+  const setCurrentStudent = useStore((state) => state.setCurrentStudent);
   const currentProject = useStore((state) => state.currentProject);
   const wsConnected = useStore((state) => state.wsConnected);
 
@@ -26,32 +23,39 @@ export function PortfolioDisplay() {
   const scrollWidth = useStore((state) => state.scrollWidth);
   const clientWidth = useStore((state) => state.clientWidth);
 
-  // 2. Local State für Transitions-Management
-  // Wir tracken die vorherige ID, um Änderungen festzustellen
-  const [prevStudentId, setPrevStudentId] = useState(currentStudentId);
-  // Dieser State hält den IdleScreen sichtbar, während die Animation läuft
-  const [isIdleExiting, setIsIdleExiting] = useState(false);
-
   const { getStudentById, loading: studentsLoading } = useStudentsData();
 
-  // --- LOGIC: RENDER-PHASE STATE UPDATE ---
-  // Das verhindert den "SetState in useEffect" Fehler und Flackern.
-  // Wenn sich die ID im Store ändert, updaten wir sofort den lokalen State.
-  if (currentStudentId !== prevStudentId) {
-    setPrevStudentId(currentStudentId);
+  // 2. Local State
+  const [isIdleExiting, setIsIdleExiting] = useState(false);
+  const [animatingStudentId, setAnimatingStudentId] = useState<string | null>(
+    null
+  );
+
+  // State um Änderungen zu erkennen (ersetzt den useEffect Dependency Array)
+  const [lastHandledId, setLastHandledId] = useState(currentStudentId);
+
+  // --- LOGIC: RENDER-PHASE UPDATE (Fixes ESLint & Flash) ---
+  // Wir prüfen hier direkt, ob sich die Store-ID verändert hat.
+  if (currentStudentId !== lastHandledId) {
+    setLastHandledId(currentStudentId); // Update tracked ID
 
     if (currentStudentId) {
-      // Eine neue ID ist da -> Wir starten den Exit-Prozess (Animation)
+      // 1. Neuer Student da -> Sofort Animation starten
+      // Da dies während des Renders passiert, gibt es keinen "Content Flash"
+      console.log("🎬 Starting Idle Exit Animation for:", currentStudentId);
+      setAnimatingStudentId(currentStudentId);
       setIsIdleExiting(true);
     } else {
-      // ID wurde gelöscht (Reset) -> IdleScreen ist wieder normal da
+      // 2. Reset (CD raus) -> Sofort alles zurücksetzen
       setIsIdleExiting(false);
+      setAnimatingStudentId(null);
     }
   }
 
-  // Callback: Wird aufgerufen, wenn GSAP im IdleScreen fertig ist (nach dem Hold)
+  // Callback: Wird von IdleScreen aufgerufen, wenn GSAP fertig ist
   const handleIdleAnimationComplete = () => {
-    setIsIdleExiting(false); // Jetzt schalten wir tatsächlich um
+    console.log("✅ Idle Animation Complete. Switching to Content.");
+    setIsIdleExiting(false);
   };
 
   // --- SCROLLBAR CALCULATIONS ---
@@ -70,18 +74,21 @@ export function PortfolioDisplay() {
 
   // --- VIEW LOGIC ---
 
-  // Wir zeigen den IdleScreen, wenn:
-  // 1. Noch kein Student ausgewählt ist (currentStudentId ist leer/null)
-  // 2. ODER wir gerade noch am Animieren sind (isIdleExiting ist true)
   const showIdleScreen = !currentStudentId || isIdleExiting;
+
+  // Nimmt entweder die ID die wir gerade animieren oder die aktuelle
+  const targetIdForIdle = animatingStudentId || currentStudentId;
 
   if (showIdleScreen) {
     return (
       <IdleScreen
+        // Der Key ist entscheidend! Er zwingt React, den Screen neu zu bauen,
+        // wenn sich die ID ändert. Das garantiert, dass GSAP sauber von vorne startet.
+        key="idle-screen-static"
         isConnected={wsConnected}
-        targetStudentId={currentStudentId} // Wichtig: Damit IdleScreen weiß, welches Cover er fangen muss
+        targetStudentId={targetIdForIdle}
         onAnimationComplete={handleIdleAnimationComplete}
-        onFakeNfc={(id) => setCurrentStudent(id)} // Fake Trigger für Click-Test
+        onFakeNfc={(id) => setCurrentStudent(id)}
       />
     );
   }
@@ -97,14 +104,14 @@ export function PortfolioDisplay() {
   }
 
   // Daten holen
-  const studentID = parseInt(currentStudentId);
+  const studentID = parseInt(currentStudentId || "0");
   const student = getStudentById(studentID);
 
   // --- ERROR STATE ---
   if (!student) {
     return (
       <div className="portfolio-error">
-        <p>Student not found.</p>
+        <p>Student not found (ID: {currentStudentId})</p>
       </div>
     );
   }

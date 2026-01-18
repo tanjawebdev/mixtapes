@@ -64,7 +64,7 @@
   will-change: transform;
   /* Wir nutzen keine Animation property hier im CSS, 
      da wir sie in JS dynamisch killen, aber fürs Initiale setup ok */
-  animation: scrollDiagonal 10s linear infinite;
+  animation: scrollDiagonal 120s linear infinite;
   padding: 50px 0;
 }
 
