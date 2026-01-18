@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useStore } from "../store";
 import { useStudentsData } from "../hooks/useStudentsData";
 import { ContentDisplay } from "./ContentDisplay";
@@ -10,51 +11,82 @@ import "./PortfolioDisplay.css";
 import folderClosedIcon from "../assets/folder-close.png";
 import folderOpenIcon from "../assets/folder-open.png";
 
-
 /**
  * Main portfolio display component
  */
 export function PortfolioDisplay() {
+  // 1. Store Hooks
   const currentStudentId = useStore((state) => state.currentStudentId);
+  const setCurrentStudent = useStore((state) => state.setCurrentStudent); // Funktion zum Setzen der ID
   const currentProject = useStore((state) => state.currentProject);
   const wsConnected = useStore((state) => state.wsConnected);
+
+  // UI Store Hooks
   const scrollPosition = useStore((state) => state.scrollPosition);
   const scrollWidth = useStore((state) => state.scrollWidth);
   const clientWidth = useStore((state) => state.clientWidth);
 
+  // 2. Local State für Transitions-Management
+  // Wir tracken die vorherige ID, um Änderungen festzustellen
+  const [prevStudentId, setPrevStudentId] = useState(currentStudentId);
+  // Dieser State hält den IdleScreen sichtbar, während die Animation läuft
+  const [isIdleExiting, setIsIdleExiting] = useState(false);
+
   const { getStudentById, loading: studentsLoading } = useStudentsData();
 
-  // Calculate custom scrollbar position and width
-  // The .portfolio-scroll-middle container is 3578px wide (fixed)
-  const SCROLLBAR_CONTAINER_WIDTH = 3578;
+  // --- LOGIC: RENDER-PHASE STATE UPDATE ---
+  // Das verhindert den "SetState in useEffect" Fehler und Flackern.
+  // Wenn sich die ID im Store ändert, updaten wir sofort den lokalen State.
+  if (currentStudentId !== prevStudentId) {
+    setPrevStudentId(currentStudentId);
 
-  // Make scroller width proportional to visible content (like native scrollbars)
-  const scrollerWidth = scrollWidth > 0
-    ? Math.max(100, (clientWidth / scrollWidth) * SCROLLBAR_CONTAINER_WIDTH)
-    : SCROLLBAR_CONTAINER_WIDTH;
+    if (currentStudentId) {
+      // Eine neue ID ist da -> Wir starten den Exit-Prozess (Animation)
+      setIsIdleExiting(true);
+    } else {
+      // ID wurde gelöscht (Reset) -> IdleScreen ist wieder normal da
+      setIsIdleExiting(false);
+    }
+  }
+
+  // Callback: Wird aufgerufen, wenn GSAP im IdleScreen fertig ist (nach dem Hold)
+  const handleIdleAnimationComplete = () => {
+    setIsIdleExiting(false); // Jetzt schalten wir tatsächlich um
+  };
+
+  // --- SCROLLBAR CALCULATIONS ---
+  const SCROLLBAR_CONTAINER_WIDTH = 3578;
+  const scrollerWidth =
+    scrollWidth > 0
+      ? Math.max(100, (clientWidth / scrollWidth) * SCROLLBAR_CONTAINER_WIDTH)
+      : SCROLLBAR_CONTAINER_WIDTH;
 
   const maxScrollLeft = scrollWidth - clientWidth;
-  const scrollPercentage = maxScrollLeft > 0 ? scrollPosition / maxScrollLeft : 0;
-
-  // clamp scrollPercentage between 0 and 1
+  const scrollPercentage =
+    maxScrollLeft > 0 ? scrollPosition / maxScrollLeft : 0;
   const clampedScrollPercentage = Math.max(0, Math.min(1, scrollPercentage));
-
-  // Calculate available space for scroller to move within the 3578px container
   const maxScrollerLeft = SCROLLBAR_CONTAINER_WIDTH - scrollerWidth;
   const scrollerLeft = clampedScrollPercentage * maxScrollerLeft;
 
-  //console.log(maxScrollLeft);
-  //console.log(scrollPercentage);
-  //console.log(scrollerLeft);
-  //console.log(scrollWidth);
-  //console.log(clientWidth);
+  // --- VIEW LOGIC ---
 
-  // --- 1. IDLE STATE CHECK ---
-  if (!currentStudentId || currentStudentId === "") {
-    return <IdleScreen isConnected={wsConnected} />;
+  // Wir zeigen den IdleScreen, wenn:
+  // 1. Noch kein Student ausgewählt ist (currentStudentId ist leer/null)
+  // 2. ODER wir gerade noch am Animieren sind (isIdleExiting ist true)
+  const showIdleScreen = !currentStudentId || isIdleExiting;
+
+  if (showIdleScreen) {
+    return (
+      <IdleScreen
+        isConnected={wsConnected}
+        targetStudentId={currentStudentId} // Wichtig: Damit IdleScreen weiß, welches Cover er fangen muss
+        onAnimationComplete={handleIdleAnimationComplete}
+        onFakeNfc={(id) => setCurrentStudent(id)} // Fake Trigger für Click-Test
+      />
+    );
   }
 
-  // --- 2. LOADING STATE ---
+  // --- LOADING STATE ---
   if (studentsLoading) {
     return (
       <div className="portfolio-loading">
@@ -64,12 +96,11 @@ export function PortfolioDisplay() {
     );
   }
 
-  // Prepare Data
+  // Daten holen
   const studentID = parseInt(currentStudentId);
   const student = getStudentById(studentID);
 
-  // --- 3. ERROR STATE (Student Not Found) ---
-  // If we have an ID but no matching student, return an error UI here.
+  // --- ERROR STATE ---
   if (!student) {
     return (
       <div className="portfolio-error">
@@ -78,13 +109,13 @@ export function PortfolioDisplay() {
     );
   }
 
-  // ensure we have a valid number. Default to 1 (or 0) if null.
   const activeProjectNumber = currentProject ?? 1;
 
+  // --- MAIN PORTFOLIO UI ---
   return (
     <div className="portfolio-display">
       <div className="portfolio-display-inner">
-        <img className="portfolio-bg" src={bgImage} />
+        <img className="portfolio-bg" src={bgImage} alt="Background" />
 
         <div className="portfolio-header">
           <div className="portfolio-header-inner">
@@ -93,7 +124,11 @@ export function PortfolioDisplay() {
               {student.projects.map((_, index) => (
                 <img
                   key={index}
-                  src={index + 1 === activeProjectNumber ? folderOpenIcon : folderClosedIcon}
+                  src={
+                    index + 1 === activeProjectNumber
+                      ? folderOpenIcon
+                      : folderClosedIcon
+                  }
                   alt={`Project ${index + 1}`}
                 />
               ))}
@@ -125,7 +160,7 @@ export function PortfolioDisplay() {
               className="portfolio-scroller"
               style={{
                 transform: `translateX(${scrollerLeft}px)`,
-                width: `${scrollerWidth}px`
+                width: `${scrollerWidth}px`,
               }}
             ></div>
           </div>

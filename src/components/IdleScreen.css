@@ -8,7 +8,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: var(--color-primary-dark);
 }
+
 .idle-container .idle-wrapper {
   width: 3630px;
   height: 1958px;
@@ -52,30 +54,61 @@
 .idle-marquee-wrapper {
   transform: translate(-50%, 50%) rotate(-45deg);
   pointer-events: none;
+  transform-origin: center center;
 }
-
 .idle-marquee-track {
   display: flex;
   align-items: center;
   gap: 0;
   width: max-content;
+  will-change: transform;
+  /* Wir nutzen keine Animation property hier im CSS, 
+     da wir sie in JS dynamisch killen, aber fürs Initiale setup ok */
   animation: scrollDiagonal 60s linear infinite;
   padding: 50px 0;
 }
 
 .idle-image-block {
+  /* Rotation bleibt, verursacht aber das "schiefe" Achsen-Problem bei GSAP */
   transform: rotate(45deg);
   margin-right: -400px;
   width: 700px;
   height: 700px;
+  flex-shrink: 0;
+  position: relative;
+
+  /* Flexbox für Text-Zentrierung */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .idle-image-block img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
+/* Der Text Style */
+.idle-student-name {
+  margin-top: 30px; /* Abstand zum Bild */
+  font-family: "Space Mono", monospace;
+  font-size: 42px;
+  color: var(--color-primary-white);
+  text-align: center;
+  background-color: var(--color-primary); /* Hintergrund für Lesbarkeit */
+  padding: 8px 24px;
+  border: 2px solid var(--color-primary-dark);
+
+  /* Initial komplett unsichtbar */
+  opacity: 0;
+  visibility: hidden;
+
+  /* Damit er beim Animieren nicht flackert */
+  will-change: opacity, transform;
+}
 @keyframes scrollDiagonal {
   0% {
     transform: translateX(0);
@@ -116,7 +149,7 @@
 .idle-disk-container .idle-disk-text-container p {
   color: var(--color-primary-dark);
   border: 6px solid var(--color-primary);
-  padding: 2px 64px;
+  padding: 0 64px;
   font-size: 64px;
   font-family: "Chicago";
   margin: 0;
