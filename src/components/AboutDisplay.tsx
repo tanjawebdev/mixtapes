@@ -110,7 +110,7 @@ export function AboutDisplay() {
   }
 
   // Split project type into individual types
-  const projectTypes = project.type.split(" ");
+ // const projectTypes = project.type.split(" ");
 
   // Display project info
   return (
@@ -158,10 +158,10 @@ export function AboutDisplay() {
                 <img src={closeIcon} alt="Close" />
               </div>
               <div className="about-type-content">
-                {projectTypes.map((type, index) => (
-                  <div key={index} className="type-item">
-                    {type}
-                  </div>
+                {project.type.map((skill, index) => (
+                    <li key={index}>
+                        {skill}
+                    </li>
                 ))}
               </div>
             </div>

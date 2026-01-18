@@ -2,7 +2,7 @@
 export interface Project {
     title: string;
     year: string;
-    type: string;
+    type: string[];
     client: string;
     collaborators: string;
     about: string;
