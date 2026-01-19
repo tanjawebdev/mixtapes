@@ -14,6 +14,7 @@ import idleBg from "../assets/idle-bg.jpg";
 import book from "../assets/contact-book.png";
 import stars from "../../public/Icons/chrome-star.png";
 
+
 /**
  * About Display Component
  *
@@ -23,6 +24,7 @@ import stars from "../../public/Icons/chrome-star.png";
 export function AboutDisplay() {
   const currentStudentId = useStore((state) => state.currentStudentId);
   const currentProject = useStore((state) => state.currentProject);
+  const studentActive = useStore((state) => state.studentActive);
 
   const { getStudentById, loading: studentsLoading } = useStudentsData();
 
@@ -35,7 +37,7 @@ export function AboutDisplay() {
   const randomBgNumber = studentID ? getStudentBackgroundNumber(studentID) : 1;
 
   // No student or project selected yet
-  if (!currentStudentId || currentProject === null) {
+  if (!currentStudentId || currentProject === null || !studentActive) {
     return (
       <div className="abt-waiting-container">
         <div className="abt-waiting-wrapper">
@@ -110,7 +112,7 @@ export function AboutDisplay() {
   }
 
   // Split project type into individual types
- // const projectTypes = project.type.split(" ");
+  // const projectTypes = project.type.split(" ");
 
   // Display project info
   return (
@@ -159,9 +161,9 @@ export function AboutDisplay() {
               </div>
               <div className="about-type-content">
                 {project.type.map((skill, index) => (
-                    <li key={index}>
-                        {skill}
-                    </li>
+                  <li key={index}>
+                    {skill}
+                  </li>
                 ))}
               </div>
             </div>

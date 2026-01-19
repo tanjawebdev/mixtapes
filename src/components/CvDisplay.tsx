@@ -8,6 +8,7 @@ import textfileIcon from '../assets/text-file.png';
 import paintIcon from '../assets/paint.png';
 import contactBookIcon from '../assets/contact-book.png';
 import paperplaneIcon from '../assets/Paperplane.png';
+import { IdlePosterScreen } from './IdlePosterScreen';
 
 /**
  * CV Display Component
@@ -17,6 +18,14 @@ import paperplaneIcon from '../assets/Paperplane.png';
  */
 export function CvDisplay() {
     const currentStudentId = useStore((state) => state.currentStudentId);
+    const studentActive = useStore((state) => state.studentActive);
+
+    // Check if idle screen should be shown
+    const showIdleScreen = !currentStudentId || !studentActive;
+
+    if (showIdleScreen) {
+        return <IdlePosterScreen />;
+    }
 
     // Use the new data loading system
     const { getStudentById, loading: studentsLoading } = useStudentsData();
@@ -27,18 +36,6 @@ export function CvDisplay() {
 
     // Get consistent background number for this student (1-4)
     const randomBgNumber = studentID ? getStudentBackgroundNumber(studentID) : 1;
-
-    // No student selected yet
-    if (!currentStudentId) {
-        return (
-            <div className="cv-waiting">
-                <div className="waiting-message">
-                    <h1>Student CV</h1>
-                    <p>Waiting for OSC trigger...</p>
-                </div>
-            </div>
-        );
-    }
 
     // Loading state
     if (studentsLoading) {
