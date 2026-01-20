@@ -67,7 +67,7 @@ export function CvDisplay() {
                         <div className="cv-top-section">
                             <div className="cv-cover-section">
                                 <div className="cv-cover-image">
-                                    <img src={`covers/${studentID}.jpg`} />
+                                    <img src={`covers/${studentID}.webp`} />
                                 </div>
                                 <div className="cv-cover-disc">
                                     <img src={discIcon} alt="Student" />
