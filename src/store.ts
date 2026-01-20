@@ -34,14 +34,14 @@ type Store = ExtendedAppState & StoreActions;
 
 const initialState: ExtendedAppState = {
     currentStudentId: "", // Set to empty string to trigger loading
-    currentProject: 0,
+    currentProject: null, // null = no project selected
     error: null,
     wsConnected: false,
     scrollPosition: 0,
     scrollWidth: 0,
     clientWidth: 0,
     // --- NEU: Initialer Status ---
-    transitionStage: "IDLE",
+    transitionStage: "IDLE", // IDLE, GSAP_EXIT, CURTAIN_UP 
     studentActive: false,
 };
 
