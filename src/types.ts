@@ -43,6 +43,7 @@ export interface AppState {
     scrollPosition: number; // Gallery scroll position controlled by OSC
     scrollWidth: number; // Total scrollable width of gallery
     clientWidth: number; // Visible width of gallery
+    studentActive: boolean;
 }
 
 // Content type detection
