@@ -1,11 +1,11 @@
 import React from "react";
 import "./IdlePosterScreen.css";
-import poster from "../assets/poster.gif";
+import poster from "../assets/idleposter.mp4";
 
 export const IdlePosterScreen: React.FC = () => {
     return (
         <div className="idle-poster-container">
-            <img src={poster} alt="Idle Poster" className="idle-poster-gif" />
+            <video src={poster} className="idle-poster-gif" autoPlay loop muted playsInline />
         </div>
     );
 };
