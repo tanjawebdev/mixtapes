@@ -45,7 +45,7 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({
       });
       const results = await Promise.all(checkPromises);
       const validPaths = results.filter(
-        (path): path is string => path !== null
+        (path): path is string => path !== null,
       );
       setFoundImages(validPaths);
     };
@@ -108,7 +108,7 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({
       const targetSrcFragment = `/covers/${targetStudentId}.webp`;
       const allImages = Array.from(track.querySelectorAll("img"));
       const candidates = allImages.filter((img) =>
-        img.src.includes(targetSrcFragment)
+        img.src.includes(targetSrcFragment),
       );
 
       // Falls WIRKLICH kein Bild gefunden wurde (obwohl geladen), dann skippen.
@@ -180,7 +180,7 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({
           duration: 2.2,
           ease: "power3.inOut",
         },
-        "<"
+        "<",
       );
 
       // --- PHASE 4: REVEAL ---
@@ -194,15 +194,15 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({
             duration: 0.8,
             ease: "power2.out",
           },
-          "-=1.5"
+          "-=1.5",
         );
       }
 
       // --- PHASE 5: HOLD ---
-      tl.to({}, { duration: 3 });
+      tl.to({}, { duration: 1 });
     },
     // WICHTIG: foundImages muss hier rein, damit der Hook neu feuert, wenn der Fetch fertig ist!
-    { scope: containerRef, dependencies: [targetStudentId, foundImages] }
+    { scope: containerRef, dependencies: [targetStudentId, foundImages] },
   );
 
   return (
@@ -246,7 +246,7 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (onFakeNfc) onFakeNfc("28");
+            if (onFakeNfc) onFakeNfc("46");
           }}
           style={{ cursor: "pointer" }}
         >
