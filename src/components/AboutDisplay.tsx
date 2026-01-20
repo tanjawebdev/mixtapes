@@ -49,10 +49,6 @@ export function AboutDisplay() {
       console.log(" - Current Project Nr:", currentProject);
       console.log(" - Target Index:", activeProjectIndex);
       console.log(" - Project Found:", !!project);
-
-      if (!student) console.warn("⚠️ Student ID matches no data!");
-      if (student && !project)
-        console.warn("⚠️ Student found but Project is missing!");
     }
   }, [
     transitionStage,
