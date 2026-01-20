@@ -248,7 +248,7 @@ export const IdleScreen: React.FC<IdleScreenProps> = ({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (onFakeNfc) onFakeNfc("46");
+            if (onFakeNfc) onFakeNfc("1");
           }}
           style={{ cursor: "pointer" }}
         >

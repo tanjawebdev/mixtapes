@@ -19,12 +19,11 @@ import { useTransitionSync } from "../hooks/useTransitionSync";
  */
 export function CvDisplay() {
     const currentStudentId = useStore((state) => state.currentStudentId);
-    const studentActive = useStore((state) => state.studentActive);
 
     // --- NEU: State für die Animation holen & Sync aktivieren ---
     const transitionStage = useStore((state) => state.transitionStage);
 
-    // WICHTIG: false = Slave Mode (hört nur zu)
+    // WICHTIG: false = Slave Mode (hört nur zu, master controls transitions)
     useTransitionSync(false);
 
     // Data Loading
@@ -35,14 +34,14 @@ export function CvDisplay() {
     const randomBgNumber = studentID ? getStudentBackgroundNumber(studentID) : 1;
 
     // --- NEU: Die Logik-Weiche ---
-    // Wir zeigen den echten CV nur, wenn die Animation in der 'Enthüllungs-Phase' ist
-    // UND wir einen Studenten gefunden haben.
+    // Show real CV content during: CURTAIN_DOWN, FINISHED, and CURTAIN_EXIT_UP (being covered)
+    // Show idle screen during: IDLE, GSAP_EXIT, CURTAIN_UP, CURTAIN_EXIT_DOWN
     const showRealContent =
-        ["CURTAIN_DOWN", "FINISHED"].includes(transitionStage) && student;
+        ["CURTAIN_DOWN", "FINISHED", "CURTAIN_EXIT_UP"].includes(transitionStage) && student;
 
     return (
         <>
-            {/* 1. Der Vorhang (Passiv, ohne Callbacks) */}
+            {/* SLAVE: Just renders curtain, master (PortfolioDisplay) controls all transitions */}
             <CurtainTransition />
 
             {/* 2. Die Entscheidung: Inhalt oder Warte-Bildschirm? */}

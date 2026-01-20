@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useStore } from "../store";
 import { useStudentsData } from "../hooks/useStudentsData";
 import { ContentDisplay } from "./ContentDisplay";
@@ -22,6 +22,7 @@ export function PortfolioDisplay() {
 
   const transitionStage = useStore((state) => state.transitionStage);
   const setTransitionStage = useStore((state) => state.setTransitionStage);
+  const setStudentActive = useStore((state) => state.setStudentActive);
 
   const scrollPosition = useStore((state) => state.scrollPosition);
   const scrollWidth = useStore((state) => state.scrollWidth);
@@ -30,37 +31,89 @@ export function PortfolioDisplay() {
   const { getStudentById, loading: studentsLoading } = useStudentsData();
 
   useTransitionSync(true);
-  // --- LOGIC: MASTER CONTROLLER ---
+
+  // --- LOGIC: FORWARD TRANSITION (Student selected) ---
   useEffect(() => {
-    if (!currentStudentId) {
-      if (transitionStage !== "IDLE") {
-        setTransitionStage("IDLE");
-      }
-      return;
-    }
+    // Start forward transition when student is selected
     if (currentStudentId && transitionStage === "IDLE") {
+      console.log("🎬 Starting forward transition: IDLE → GSAP_EXIT");
       setTransitionStage("GSAP_EXIT");
     }
   }, [currentStudentId, transitionStage, setTransitionStage]);
 
+  // --- REVERSE TRANSITION: Watch for studentActive becoming false ---
+  const prevStudentActive = useRef(studentActive);
+  useEffect(() => {
+    // DEBUG: Log all values to diagnose the issue
+    console.log("🔍 studentActive check:", {
+      previous: prevStudentActive.current,
+      current: studentActive,
+      transitionStage,
+      currentStudentId,
+      conditionMet: prevStudentActive.current === true && studentActive === false,
+      stageIsFinished: transitionStage === "FINISHED"
+    });
+
+    // Trigger reverse transition when going from active to inactive
+    if (prevStudentActive.current === true && studentActive === false) {
+      if (transitionStage === "FINISHED") {
+        console.log("🔄 Student became inactive - starting reverse transition: FINISHED → CURTAIN_EXIT_UP");
+        setTransitionStage("CURTAIN_EXIT_UP");
+      } else {
+        console.warn("⚠️ Student became inactive but transitionStage is not FINISHED:", transitionStage);
+      }
+    }
+    prevStudentActive.current = studentActive;
+  }, [studentActive, transitionStage, setTransitionStage, currentStudentId]);
+
   const handleIdleAnimationComplete = () => {
+    console.log("🎭 Idle animation complete: GSAP_EXIT → CURTAIN_UP");
     setTransitionStage("CURTAIN_UP");
   };
 
   const handleCurtainCovered = () => {
-    setTransitionStage("CURTAIN_DOWN");
+    // Called when curtain fully covers the screen
+    if (transitionStage === "CURTAIN_UP") {
+      // Forward transition: covered idle screen, now reveal content
+      console.log("🎭 Curtain covered (forward): CURTAIN_UP → CURTAIN_DOWN");
+      setTransitionStage("CURTAIN_DOWN");
+    } else if (transitionStage === "CURTAIN_EXIT_UP") {
+      // Reverse transition: covered content, now reveal idle
+      // Add delay to ensure idle screen has time to mount and load
+      console.log("🎭 Curtain covered (reverse): CURTAIN_EXIT_UP → waiting 600ms for idle screen...");
+      setTimeout(() => {
+        console.log("🎭 Revealing idle screen: → CURTAIN_EXIT_DOWN");
+        setTransitionStage("CURTAIN_EXIT_DOWN");
+      }, 400); // 600ms buffer for idle screen to load
+    }
   };
 
   const handleCurtainRevealed = () => {
-    setTransitionStage("FINISHED");
+    // Called when curtain fully reveals what's underneath
+    if (transitionStage === "CURTAIN_DOWN") {
+      // Forward transition: revealed content, transition complete
+      console.log("✅ Forward transition complete: CURTAIN_DOWN → FINISHED");
+      setTransitionStage("FINISHED");
+    } else if (transitionStage === "CURTAIN_EXIT_DOWN") {
+      // Reverse transition: revealed idle, back to IDLE state
+      console.log("✅ Reverse transition complete: CURTAIN_EXIT_DOWN → IDLE");
+      setTransitionStage("IDLE");
+      // Clear the student to fully reset to idle state
+      setCurrentStudent("");
+    }
   };
+
+  // if currently 
 
   // --- VIEW LOGIC ---
   const showIdleScreen =
-    !currentStudentId ||
     transitionStage === "IDLE" ||
     transitionStage === "GSAP_EXIT" ||
-    transitionStage === "CURTAIN_UP";
+    transitionStage === "CURTAIN_UP" ||
+    transitionStage === "CURTAIN_EXIT_DOWN";  // Mount during reveal (after 300ms delay)
+
+  console.log("transitionStage", transitionStage);
+  //const showIdleScreen = false;
 
   // --- SCROLLBAR CALCULATIONS ---
   const SCROLLBAR_CONTAINER_WIDTH = 3578;
@@ -76,7 +129,7 @@ export function PortfolioDisplay() {
   const maxScrollerLeft = SCROLLBAR_CONTAINER_WIDTH - scrollerWidth;
   const scrollerLeft = clampedScrollPercentage * maxScrollerLeft;
 
-  const studentID = parseInt(currentStudentId || "0");
+  const studentID = parseInt(currentStudentId || "");
   const student = getStudentById(studentID);
   const activeProjectNumber = currentProject ?? 1;
 
@@ -99,7 +152,11 @@ export function PortfolioDisplay() {
           isConnected={wsConnected}
           targetStudentId={currentStudentId}
           onAnimationComplete={handleIdleAnimationComplete}
-          onFakeNfc={(id) => setCurrentStudent(id)}
+          onFakeNfc={(id) => {
+            console.log("Fake NFC triggered for student ID:", id);
+            setCurrentStudent(id);
+            setStudentActive(true);
+          }}
         />
       ) : (
         // CONTENT SCREEN: Hier brauchen wir den Wrapper für Layout & BG
@@ -109,6 +166,7 @@ export function PortfolioDisplay() {
 
             <div className="portfolio-header">
               <div className="portfolio-header-inner">
+                <button onClick={() => setStudentActive(false)}>set student active</button>
                 <h4 className="portfolio-title">Portfolio</h4>
                 {student && (
                   <div className="project-icons-pagination">
@@ -145,7 +203,7 @@ export function PortfolioDisplay() {
                 </div>
               ) : student ? (
                 <ContentDisplay
-                  studentId={currentStudentId}
+                  studentId={currentStudentId!}
                   projectNumber={activeProjectNumber}
                 />
               ) : (

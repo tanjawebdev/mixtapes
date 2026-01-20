@@ -17,9 +17,14 @@ export const CurtainTransition: React.FC<CurtainTransitionProps> = ({
 
   // 1. Definition: Wann ist die Komponente aktiv?
   // Wir nehmen 'FINISHED' dazu, damit sie nicht abrupt verschwindet, bevor wir das wollen.
-  const isActive = ["CURTAIN_UP", "CURTAIN_DOWN", "FINISHED"].includes(
-    transitionStage,
-  );
+  // Auch die Exit-Phasen müssen aktiv sein.
+  const isActive = [
+    "CURTAIN_UP",
+    "CURTAIN_DOWN",
+    "FINISHED",
+    "CURTAIN_EXIT_UP",
+    "CURTAIN_EXIT_DOWN",
+  ].includes(transitionStage);
 
   // 2. HOOKS MÜSSEN IMMER HIER OBEN STEHEN (Vor dem return!)
   useGSAP(() => {
@@ -47,6 +52,34 @@ export const CurtainTransition: React.FC<CurtainTransitionProps> = ({
     else if (transitionStage === "CURTAIN_DOWN") {
       gsap.to(curtainRef.current, {
         y: "-100%",
+        duration: 0.8,
+        ease: "power3.inOut",
+        onComplete: () => {
+          if (onRevealed) onRevealed();
+        },
+      });
+    }
+
+    // --- REVERSE PHASE 1: VORHANG DECKT CONTENT AB ---
+    else if (transitionStage === "CURTAIN_EXIT_UP") {
+      gsap.fromTo(
+        curtainRef.current,
+        { y: "-100%" }, // Start: Oben (außerhalb)
+        {
+          y: "0%", // Ende: Vollflächig (deckt alles ab)
+          duration: 0.8,
+          ease: "power3.inOut",
+          onComplete: () => {
+            if (onCovered) onCovered();
+          },
+        },
+      );
+    }
+
+    // --- REVERSE PHASE 2: VORHANG ENTHÜLLT IDLE SCREEN ---
+    else if (transitionStage === "CURTAIN_EXIT_DOWN") {
+      gsap.to(curtainRef.current, {
+        y: "100%", // Fährt nach unten weg
         duration: 0.8,
         ease: "power3.inOut",
         onComplete: () => {

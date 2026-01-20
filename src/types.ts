@@ -44,6 +44,7 @@ export interface AppState {
     scrollWidth: number; // Total scrollable width of gallery
     clientWidth: number; // Visible width of gallery
     studentActive: boolean;
+    prevStudentId: string | null;
 }
 
 // Content type detection

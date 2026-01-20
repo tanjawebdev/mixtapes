@@ -63,8 +63,8 @@ export function AboutDisplay() {
   ]);
 
   // --- LOGIC SWITCH ---
-  // Bedingung: Wir brauchen Daten UND die Animation muss so weit sein.
-  const isTransitionReady = ["CURTAIN_DOWN", "FINISHED"].includes(
+  // Show real content during: CURTAIN_DOWN, FINISHED, and CURTAIN_EXIT_UP (being covered)
+  const isTransitionReady = ["CURTAIN_DOWN", "FINISHED", "CURTAIN_EXIT_UP"].includes(
     transitionStage,
   );
   const hasData = !!(student && project);

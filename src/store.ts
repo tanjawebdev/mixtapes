@@ -8,7 +8,9 @@ export type TransitionStage =
     | "GSAP_EXIT" // Die GSAP Animation läuft (Disk wird gefangen)
     | "CURTAIN_UP" // Der bunte Div fährt hoch (Verdeckt alles)
     | "CURTAIN_DOWN" // Der bunte Div fährt weiter hoch (Enthüllt Content)
-    | "FINISHED"; // Alles fertig, Content ist da
+    | "FINISHED" // Alles fertig, Content ist da
+    | "CURTAIN_EXIT_UP" // Reverse: Vorhang deckt Content ab (zurück zu Idle)
+    | "CURTAIN_EXIT_DOWN"; // Reverse: Vorhang enthüllt Idle Screen
 
 // Wir erweitern den importierten AppState, damit 'transitionStage' bekannt ist
 interface ExtendedAppState extends AppState {
@@ -28,6 +30,7 @@ interface StoreActions {
     // --- NEU: Action zum Setzen der Phase ---
     setTransitionStage: (stage: TransitionStage) => void;
     setStudentActive: (active: boolean) => void;
+    setPrevStudentId: (studentId: string) => void;
 }
 
 type Store = ExtendedAppState & StoreActions;
@@ -40,9 +43,9 @@ const initialState: ExtendedAppState = {
     scrollPosition: 0,
     scrollWidth: 0,
     clientWidth: 0,
-    // --- NEU: Initialer Status ---
-    transitionStage: "IDLE", // IDLE, GSAP_EXIT, CURTAIN_UP 
+    transitionStage: "IDLE", // IDLE, GSAP_EXIT, CURTAIN_UP, CURTAIN_DOWN, FINISHED, CURTAIN_EXIT_UP, CURTAIN_EXIT_DOWN 
     studentActive: false,
+    prevStudentId: "", // or string fe "3"
 };
 
 /**
@@ -56,6 +59,7 @@ export const useStore = create<Store>((set) => ({
         set({
             currentStudentId: studentId,
             currentProject: project,
+            prevStudentId: studentId,
             error: null,
             // Hinweis: Wir setzen hier transitionStage NICHT automatisch zurück.
             // Das übernimmt die PortfolioDisplay Komponente, um die GSAP Animation zu starten.
@@ -103,8 +107,9 @@ export const useStore = create<Store>((set) => ({
 
     // Reset to project 1 (called when CD removed)
     resetToInitial: () =>
-        set((state) => ({
-            currentProject: state.currentStudentId ? 1 : null,
+        set((_) => ({
+            currentStudentId: "1",
+            currentProject: 1,
             error: null,
         })),
 
@@ -126,6 +131,9 @@ export const useStore = create<Store>((set) => ({
 
     // --- NEU: Student Active Setter ---
     setStudentActive: (active) => set({ studentActive: active }),
+
+    // --- NEU: Previous Student ID Setter ---
+    setPrevStudentId: (studentId) => set({ prevStudentId: studentId }),
 
     // Reset to initial state
     reset: () => set(initialState),
