@@ -22,6 +22,8 @@ import stars from "../../public/Icons/chrome-star.png";
 export function AboutDisplay() {
   const currentStudentId = useStore((state) => state.currentStudentId);
   const currentProject = useStore((state) => state.currentProject);
+  const studentActive = useStore((state) => state.studentActive);
+
   const transitionStage = useStore((state) => state.transitionStage);
   const { getStudentById, loading: studentsLoading } = useStudentsData();
 
@@ -50,6 +52,7 @@ export function AboutDisplay() {
       console.log(" - Target Index:", activeProjectIndex);
       console.log(" - Project Found:", !!project);
 
+    return (
       if (!student) console.warn("⚠️ Student ID matches no data!");
       if (student && !project)
         console.warn("⚠️ Student found but Project is missing!");

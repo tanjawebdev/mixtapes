@@ -1,10 +1,14 @@
-import { useStore } from "../store";
-import {
-  useStudentsData,
-  getMajorFullName,
-  getStudentBackgroundNumber,
-} from "../hooks/useStudentsData";
-import "./CvDisplay.css";
+import { useStore } from '../store';
+import { useStudentsData, getMajorFullName, getStudentBackgroundNumber } from '../hooks/useStudentsData';
+import './CvDisplay.css';
+import closeIcon from '../assets/close.svg';
+import discIcon from '../assets/cd.gif';
+import starIcon from '../assets/chrome-star.png';
+import textfileIcon from '../assets/text-file.png';
+import paintIcon from '../assets/paint.png';
+import contactBookIcon from '../assets/contact-book.png';
+import paperplaneIcon from '../assets/Paperplane.png';
+import { IdlePosterScreen } from './IdlePosterScreen';
 
 // --- NEU: Imports für die Animation ---
 import { CurtainTransition } from "./CurtainTransition";
@@ -23,7 +27,8 @@ import paperplaneIcon from "../assets/Paperplane.png";
  * CV Display Component
  */
 export function CvDisplay() {
-  const currentStudentId = useStore((state) => state.currentStudentId);
+    const currentStudentId = useStore((state) => state.currentStudentId);
+    const studentActive = useStore((state) => state.studentActive);
 
   // --- NEU: State für die Animation holen & Sync aktivieren ---
   const transitionStage = useStore((state) => state.transitionStage);

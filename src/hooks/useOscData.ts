@@ -22,6 +22,7 @@ export const useOscData = () => {
     const resetToInitial = useStore((state) => state.resetToInitial);
     const setOscConnected = useStore((state) => state.setWsConnected);
     const setScrollPosition = useStore((state) => state.setScrollPosition);
+    const setStudentActive = useStore((state) => state.setStudentActive);
 
     const connect = useCallback(() => {
         try {
@@ -101,6 +102,19 @@ export const useOscData = () => {
                             break;
                         }
 
+                        case '/lid': {
+                            // Lid sensor: "/lid 1" (closed) or "/lid 0" (open)
+                            const closedlid = args[0]?.value === 1;
+                            if (closedlid) {
+                                console.log(`🔒 Lid closed - student inactive`);
+                                setStudentActive(false);
+                            } else {
+                                console.log(`🔓 Lid open - student active`);
+                                setStudentActive(true);
+                            }
+                            break;
+                        }
+
                         default:
                             console.log(`ℹ️  Unhandled OSC address: ${address}`);
                     }
@@ -126,7 +140,7 @@ export const useOscData = () => {
         } catch (error) {
             console.error('❌ Error connecting to OSC bridge:', error);
         }
-    }, [setCurrentStudent, navigateProject, resetToInitial, setOscConnected, setScrollPosition]);
+    }, [setCurrentStudent, navigateProject, resetToInitial, setOscConnected, setScrollPosition, setStudentActive]);
 
     useEffect(() => {
         connect();

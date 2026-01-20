@@ -41,6 +41,7 @@ const initialState: ExtendedAppState = {
   clientWidth: 0,
   // --- NEU: Initialer Status ---
   transitionStage: "IDLE",
+    studentActive: false,
 };
 
 /**
@@ -99,12 +100,13 @@ export const useStore = create<Store>((set) => ({
       };
     }),
 
-  // Reset to project 1 (called when CD removed)
-  resetToInitial: () =>
-    set((state) => ({
-      currentProject: state.currentStudentId ? 1 : null,
-      error: null,
-    })),
+    // Reset to project 1 (called when CD removed)
+    resetToInitial: () =>
+        set(() => ({
+            currentStudentId: "",
+            currentProject: null,
+            error: null,
+        })),
 
   // Set error state
   setError: (error) => set({ error }),
@@ -122,6 +124,9 @@ export const useStore = create<Store>((set) => ({
   // --- NEU: Transition Stage Setter ---
   setTransitionStage: (stage) => set({ transitionStage: stage }),
 
-  // Reset to initial state
-  reset: () => set(initialState),
+    // Set student active status (lid sensor)
+    setStudentActive: (active) => set({ studentActive: active }),
+
+    // Reset to initial state
+    reset: () => set(initialState),
 }));

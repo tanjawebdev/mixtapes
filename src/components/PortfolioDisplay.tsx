@@ -18,6 +18,7 @@ export function PortfolioDisplay() {
   const setCurrentStudent = useStore((state) => state.setCurrentStudent);
   const currentProject = useStore((state) => state.currentProject);
   const wsConnected = useStore((state) => state.wsConnected);
+  const studentActive = useStore((state) => state.studentActive);
 
   const transitionStage = useStore((state) => state.transitionStage);
   const setTransitionStage = useStore((state) => state.setTransitionStage);
