@@ -218,16 +218,7 @@ export function CvDisplay() {
                 // -------------------------
                 // B) WAITING / IDLE SCREEN
                 // -------------------------
-                <div className="cv-waiting">
-                    <div className="waiting-message">
-                        <h1>Student CV</h1>
-                        {studentsLoading ? (
-                            <div className="loading-spinner"></div>
-                        ) : (
-                            <p>Waiting for OSC trigger...</p>
-                        )}
-                    </div>
-                </div>
+                <IdlePosterScreen />
             )}
         </>
     );
