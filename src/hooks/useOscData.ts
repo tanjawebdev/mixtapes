@@ -24,6 +24,7 @@ export const useOscData = () => {
     const setScrollPosition = useStore((state) => state.setScrollPosition);
     const setStudentActive = useStore((state) => state.setStudentActive);
 
+
     const connect = useCallback(() => {
         try {
             // Connect to OSC-over-WebSocket bridge (receives from Max/MSP)
@@ -107,10 +108,10 @@ export const useOscData = () => {
                             const closedlid = args[0]?.value === 1;
                             if (closedlid) {
                                 console.log(`🔒 Lid closed - student inactive`);
-                                setStudentActive(false);
+                                setStudentActive(true);
                             } else {
                                 console.log(`🔓 Lid open - student active`);
-                                setStudentActive(true);
+                                setStudentActive(false);
                             }
                             break;
                         }
