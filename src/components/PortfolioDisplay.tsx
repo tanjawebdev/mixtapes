@@ -166,8 +166,7 @@ export function PortfolioDisplay() {
 
             <div className="portfolio-header">
               <div className="portfolio-header-inner">
-                <button onClick={() => setStudentActive(false)}>set student active</button>
-                <h4 className="portfolio-title">Portfolio</h4>
+                <h4 className="portfolio-title" onClick={() => setStudentActive(false)}>Portfolio</h4>
                 {student && (
                   <div className="project-icons-pagination">
                     {student.projects.map((_, index) => (
