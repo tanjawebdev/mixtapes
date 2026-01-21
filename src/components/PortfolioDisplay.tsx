@@ -57,14 +57,27 @@ export function PortfolioDisplay() {
     // Trigger reverse transition when going from active to inactive
     if (prevStudentActive.current === true && studentActive === false) {
       if (transitionStage === "FINISHED") {
-        console.log("🔄 Student became inactive - starting reverse transition: FINISHED → CURTAIN_EXIT_UP");
-        setTransitionStage("CURTAIN_EXIT_UP");
+        console.log("🔄 Student became inactive - preparing reverse transition: FINISHED → CURTAIN_EXIT_PREPARE");
+        setTransitionStage("CURTAIN_EXIT_PREPARE");
       } else {
         console.warn("⚠️ Student became inactive but transitionStage is not FINISHED:", transitionStage);
       }
     }
     prevStudentActive.current = studentActive;
   }, [studentActive, transitionStage, setTransitionStage, currentStudentId]);
+
+  // --- SYNC DELAY: Wait for all displays to receive PREPARE signal ---
+  useEffect(() => {
+    if (transitionStage === "CURTAIN_EXIT_PREPARE") {
+      console.log("⏱️ Sync delay: All displays preparing for exit animation...");
+      const timer = setTimeout(() => {
+        console.log("🎬 Starting synchronized exit animation: CURTAIN_EXIT_PREPARE → CURTAIN_EXIT_UP");
+        setTransitionStage("CURTAIN_EXIT_UP");
+      }, 200); // 200ms delay for sync
+
+      return () => clearTimeout(timer);
+    }
+  }, [transitionStage, setTransitionStage]);
 
   const handleIdleAnimationComplete = () => {
     console.log("🎭 Idle animation complete: GSAP_EXIT → CURTAIN_UP");

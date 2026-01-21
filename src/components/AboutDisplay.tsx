@@ -63,8 +63,8 @@ export function AboutDisplay() {
   ]);
 
   // --- LOGIC SWITCH ---
-  // Show real content during: CURTAIN_DOWN, FINISHED, and CURTAIN_EXIT_UP (being covered)
-  const isTransitionReady = ["CURTAIN_DOWN", "FINISHED", "CURTAIN_EXIT_UP"].includes(
+  // Show real content during: CURTAIN_DOWN, FINISHED, CURTAIN_EXIT_PREPARE (syncing), and CURTAIN_EXIT_UP (being covered)
+  const isTransitionReady = ["CURTAIN_DOWN", "FINISHED", "CURTAIN_EXIT_PREPARE", "CURTAIN_EXIT_UP"].includes(
     transitionStage,
   );
   const hasData = !!(student && project);

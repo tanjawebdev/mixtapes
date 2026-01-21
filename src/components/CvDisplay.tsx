@@ -34,10 +34,10 @@ export function CvDisplay() {
     const randomBgNumber = studentID ? getStudentBackgroundNumber(studentID) : 1;
 
     // --- NEU: Die Logik-Weiche ---
-    // Show real CV content during: CURTAIN_DOWN, FINISHED, and CURTAIN_EXIT_UP (being covered)
+    // Show real CV content during: CURTAIN_DOWN, FINISHED, CURTAIN_EXIT_PREPARE (syncing), and CURTAIN_EXIT_UP (being covered)
     // Show idle screen during: IDLE, GSAP_EXIT, CURTAIN_UP, CURTAIN_EXIT_DOWN
     const showRealContent =
-        ["CURTAIN_DOWN", "FINISHED", "CURTAIN_EXIT_UP"].includes(transitionStage) && student;
+        ["CURTAIN_DOWN", "FINISHED", "CURTAIN_EXIT_PREPARE", "CURTAIN_EXIT_UP"].includes(transitionStage) && student;
 
     return (
         <>

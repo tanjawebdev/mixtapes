@@ -9,6 +9,7 @@ export type TransitionStage =
     | "CURTAIN_UP" // Der bunte Div fährt hoch (Verdeckt alles)
     | "CURTAIN_DOWN" // Der bunte Div fährt weiter hoch (Enthüllt Content)
     | "FINISHED" // Alles fertig, Content ist da
+    | "CURTAIN_EXIT_PREPARE" // Reverse: Vorbereitung - alle Displays synchronisieren sich
     | "CURTAIN_EXIT_UP" // Reverse: Vorhang deckt Content ab (zurück zu Idle)
     | "CURTAIN_EXIT_DOWN"; // Reverse: Vorhang enthüllt Idle Screen
 
